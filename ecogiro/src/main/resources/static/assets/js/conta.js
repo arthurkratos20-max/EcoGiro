@@ -1,0 +1,2 @@
+ecogiroRequest('/api/auth/me').then(user=>{document.querySelector('#account').textContent=`Olá, ${user.name}! Você está conectado como ${user.email}.`;}).catch(()=>{location.replace('login.html');});
+document.querySelector('#logout').addEventListener('click',async()=>{try{await ecogiroRequest('/api/auth/logout',{method:'POST'});location.replace('login.html');}catch(error){document.querySelector('#account').textContent=error.message;}});

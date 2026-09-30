@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/login.css">
+    <script src="assets/js/auth.js" defer></script>
     <script src="assets/js/login.js" defer></script>
 </head>
 <body>
@@ -25,11 +26,11 @@
                 <p>Entre para continuar sua jornada com a EcoGiro.</p>
             </div>
 
-            <form action="/login" method="post">
+            <form id="login-form" action="/api/auth/login" method="post">
                 <div class="input-group">
-                    <label for="username">E-mail ou nome de usuário</label>
+                    <label for="username">E-mail</label>
                     <input
-                        type="text"
+                        type="email"
                         id="username"
                         name="username"
                         autocomplete="username"
@@ -42,7 +43,7 @@
                 <div class="input-group">
                     <div class="label-row">
                         <label for="password">Senha</label>
-                        <a href="/esqueci-senha" class="remember-password">Esqueceu a senha?</a>
+
                     </div>
                     <div class="password-field">
                         <input
@@ -57,10 +58,11 @@
                     </div>
                 </div>
 
+                <p id="auth-message" role="status" aria-live="polite"></p>
                 <button class="submit-button" type="submit">Entrar</button>
             </form>
 
-            <p class="signup-note">Ainda não tem uma conta? <a href="index.htm#planos">Conheça nossos planos</a></p>
+            <p class="signup-note">Ainda não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
             <a class="back-home" href="index.htm">← Voltar para o início</a>
         </section>
 

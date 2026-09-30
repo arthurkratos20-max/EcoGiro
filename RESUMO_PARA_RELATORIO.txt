@@ -1,0 +1,24 @@
+REGISTRO DE DESENVOLVIMENTO — ECOGIRO
+Data: 30 de setembro de 2026
+Área: Backend e integração de autenticação
+Responsável pela área: Arthur
+Branch: feature/mudança_nos_botões_principais
+
+Nesta etapa, foi preparado o módulo de cadastro e autenticação de usuários do EcoGiro, mantendo Java 17, Spring Boot e Gradle. Foram adicionados uma entidade de usuário, um repositório de persistência e rotas para cadastro, consulta do usuário autenticado e obtenção do token CSRF. O login e o logout foram configurados com Spring Security. As senhas são armazenadas como hash BCrypt, e a autenticação utiliza sessão com cookie HttpOnly, com Secure habilitado no perfil de produção.
+
+Na interface, foi criada a tela de cadastro e o formulário de login existente foi conectado à API. Também foi adicionada uma página de conta para exibir nome e e-mail do usuário e permitir o encerramento da sessão. Os formulários apresentam mensagens de resultado e encaminham o token necessário à proteção CSRF.
+
+Para a publicação em nuvem, foram preparados um Dockerfile e uma configuração de serviço para o Render, além de uma função no Cloudflare Pages que encaminha as chamadas da API ao backend. A persistência de produção foi configurada para PostgreSQL externo, com previsão de uso do Neon. As credenciais serão definidas por variáveis de ambiente. O ambiente local utiliza H2 em memória para desenvolvimento.
+
+Foram verificadas a sintaxe dos arquivos JavaScript e a função de encaminhamento da API em teste isolado. Foi escrito um teste de integração Java para cadastro, login, controle de acesso, CSRF e logout, mas sua execução ficou bloqueada pela restrição de rede durante o download do Gradle. A compilação Java, o fluxo completo com backend real, a conexão com o banco externo e a publicação ainda precisam ser confirmados pela equipe. Portanto, esta etapa registra código e configurações preparados, sem declarar a hospedagem ou a validação integral como concluídas.
+
+O pacote inclui instruções de execução e publicação em DEPLOY.md e um registro técnico detalhado em ALTERACOES_BACKEND.md. Recuperação de senha, verificação de e-mail, perfis administrativos e limitação de tentativas não fazem parte desta implementação.
+
+CAMPOS PARA COMPLETAR APÓS VALIDAÇÃO DA EQUIPE
+Data de execução dos testes Java:
+Resultado dos testes Java:
+Data da publicação:
+URL pública do site:
+URL pública do backend:
+Responsável pela validação:
+Evidências anexadas (cadastro, login, logout):
