@@ -1,5 +1,7 @@
 package com.example.ecogiro.config;
 
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.example.ecogiro.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,9 +47,23 @@ public class SecurityConfig {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler((request, response, authentication) -> {
-                    boolean admin = authentication.getAuthorities().stream()
-                            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-                    response.sendRedirect(admin ? "/admin.html" : "/usuario.html");
+                    boolean isUser = authentication.getAuthorities().stream()
+                            .anyMatch(a -> a.getAuthority().equals("ROLE_USER"));
+
+                    if (!isUser) {
+                        SecurityContextHolder.clearContext();
+
+                        if (request.getSession(false) != null) {
+                            request.getSession(false).invalidate();
+                        }
+
+                        response.sendRedirect(
+                                "/login.html?error=Esta+conta+é+administrativa.+Use+o+acesso+de+administrador."
+                        );
+                        return;
+                    }
+
+                    response.sendRedirect("/usuario.html");
                 })
                 .failureUrl("/login.html?error=1")
                 .permitAll()
