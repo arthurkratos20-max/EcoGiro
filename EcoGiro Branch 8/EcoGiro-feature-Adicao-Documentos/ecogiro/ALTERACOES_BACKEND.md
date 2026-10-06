@@ -383,3 +383,82 @@ Resultado:
 
 Validacao em producao pendente apos deploy.
 
+
+---
+
+## 19. Integracao Cloudflare Worker, Render e Neon
+
+Foi concluida a integracao do Cloudflare com o backend hospedado no Render.
+
+### Problema identificado
+
+O projeto originalmente publicado no Cloudflare Pages servia apenas os arquivos estaticos do frontend.
+
+Como os formularios e scripts utilizam rotas relativas como `/login`, `/register` e `/api/**`, requisicoes POST realizadas diretamente pelo dominio `pages.dev` eram enviadas ao Cloudflare Pages em vez do backend Spring Boot.
+
+Isso provocava respostas HTTP 405 (Method Not Allowed).
+
+A variavel `BACKEND_URL` existente no Cloudflare Pages nao resolvia o problema automaticamente, pois os arquivos HTML e JavaScript sao publicados diretamente, sem uma etapa de build que injete essa variavel no frontend.
+
+### Solucao implementada
+
+Foi criado o Cloudflare Worker:
+
+`ecogiro-proxy`
+
+O Worker atua como proxy reverso entre o navegador e o backend hospedado no Render.
+
+Fluxo atual:
+
+`Navegador -> Cloudflare Worker -> Render / Spring Boot -> Neon PostgreSQL`
+
+O Worker preserva:
+
+- metodo HTTP
+- caminho da requisicao
+- query parameters
+- headers
+- corpo das requisicoes
+- cookies e sessao de autenticacao
+- redirecionamentos do Spring Security
+
+Tambem foi implementada a reescrita de redirecionamentos absolutos do Render para o dominio atual do Worker, mantendo a navegacao do usuario dentro do endereco Cloudflare.
+
+### Validacao
+
+A integracao foi validada em producao pelo endereco do Cloudflare Worker.
+
+Testes realizados com sucesso:
+
+- carregamento da pagina inicial
+- login de usuario via POST
+- manutencao da sessao Spring Security
+- redirecionamento para `/usuario.html`
+- carregamento dos dados da conta
+- carregamento do plano ativo
+- acesso a `/planos-aluguel.html`
+- carregamento dos planos disponiveis
+- acesso a `/mapa.html`
+- carregamento do mapa Leaflet / OpenStreetMap
+- carregamento dos veiculos e suas localizacoes
+- comunicacao das APIs com o backend no Render
+- persistencia e leitura dos dados pelo PostgreSQL no Neon
+
+O erro HTTP 405 encontrado anteriormente no Cloudflare Pages nao ocorre utilizando o Worker.
+
+### Arquitetura final
+
+Cloudflare Worker:
+entrada publica e proxy reverso da aplicacao.
+
+Render:
+execucao do backend Java / Spring Boot, Spring Security e APIs.
+
+Neon:
+banco de dados PostgreSQL da aplicacao.
+
+Cloudflare Pages:
+permanece como publicacao estatica/legada do frontend. Como nao executa o backend Spring Boot, nao deve ser utilizado como endereco principal para os fluxos autenticados.
+
+O endereco funcional da aplicacao atraves da infraestrutura Cloudflare passa a ser o dominio `workers.dev` do Worker `ecogiro-proxy`.
+
