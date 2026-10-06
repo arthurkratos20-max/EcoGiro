@@ -58,7 +58,7 @@ public class SecurityConfig {
                         }
 
                         response.sendRedirect(
-                                "/login.html?error=Esta+conta+é+administrativa.+Use+o+acesso+de+administrador."
+                            "/login.html?error=Esta+conta+e+administrativa.+Use+o+acesso+de+administrador."
                         );
                         return;
                     }
