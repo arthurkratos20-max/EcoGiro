@@ -347,3 +347,39 @@ A separacao de autorizacao entre USER e ADMIN esta funcionando conforme esperado
 
 Observacao: atualmente o bloqueio HTTP 403 utiliza a pagina Whitelabel padrao do Spring Boot. A substituicao por uma pagina de acesso negado personalizada fica registrada como melhoria de interface.
 
+
+---
+
+## 18. Pagina personalizada de acesso negado
+
+Foi criada uma pagina personalizada para respostas HTTP 403 (Forbidden), substituindo a pagina Whitelabel padrao do Spring Boot quando um usuario autenticado tenta acessar uma area para a qual nao possui permissao.
+
+Arquivo criado:
+
+`src/main/resources/static/403.html`
+
+A pagina informa ao usuario que sua conta nao possui permissao para acessar a area solicitada e disponibiliza opcoes para retornar a pagina anterior ou voltar para a pagina inicial do EcoGiro.
+
+O Spring Security foi configurado utilizando:
+
+`exceptionHandling(exception -> exception.accessDeniedPage("/403.html"))`
+
+A rota `/403.html` foi adicionada as rotas publicas para permitir que a pagina de acesso negado seja exibida independentemente do perfil autenticado.
+
+A alteracao nao modifica as regras de autorizacao existentes:
+
+- rotas administrativas continuam exclusivas de `ADMIN`
+- rotas de usuario continuam exclusivas de `USER`
+- mapa continua disponivel para usuarios autenticados
+- acessos sem permissao continuam sendo bloqueados com HTTP 403
+
+A nova configuracao foi compilada localmente com:
+
+`gradlew compileJava`
+
+Resultado:
+
+`BUILD SUCCESSFUL`
+
+Validacao em producao pendente apos deploy.
+
