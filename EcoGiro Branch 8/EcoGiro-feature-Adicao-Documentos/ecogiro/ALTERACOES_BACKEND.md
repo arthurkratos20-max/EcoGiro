@@ -332,3 +332,18 @@ Resultado:
 
 Apos o deploy, devera ser validado que ADMIN tambem nao consegue mais acessar diretamente as rotas exclusivas de USER.
 
+
+### Validacao apos deploy
+
+A correcao de autorizacao foi publicada e validada em producao.
+
+Teste realizado:
+
+- ADMIN autenticado tentando acessar diretamente `/usuario.html`: bloqueado com HTTP 403 (Forbidden)
+
+Com isso, foi confirmado que as rotas exclusivas de USER nao podem mais ser acessadas por contas ADMIN.
+
+A separacao de autorizacao entre USER e ADMIN esta funcionando conforme esperado.
+
+Observacao: atualmente o bloqueio HTTP 403 utiliza a pagina Whitelabel padrao do Spring Boot. A substituicao por uma pagina de acesso negado personalizada fica registrada como melhoria de interface.
+
