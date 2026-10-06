@@ -294,3 +294,41 @@ Os fluxos de usuario e administrador foram separados e testados em producao.
 O projeto utiliza Java 21 tanto na compilacao Gradle quanto no ambiente Docker.
 
 Este documento deve ser atualizado juntamente com novas implementacoes, correcoes relevantes, alteracoes de infraestrutura e testes realizados.
+
+---
+
+## 17. Restricao das rotas por perfil
+
+Durante os testes de autorizacao em producao, foi identificado que uma conta ADMIN autenticada conseguia acessar diretamente a pagina `/usuario.html`.
+
+A causa era a configuracao das rotas de usuario utilizando apenas:
+
+`authenticated()`
+
+Essa regra permitia o acesso de qualquer conta autenticada, independentemente do papel USER ou ADMIN.
+
+A configuracao de seguranca foi alterada para separar as permissoes:
+
+- `/admin.html` e `/api/admin/**`: somente `ADMIN`
+- `/usuario.html`, `/planos-aluguel.html` e `/api/user/**`: somente `USER`
+- `/mapa.html` e `/api/map/**`: acessiveis por USER e ADMIN autenticados
+
+O mapa permaneceu compartilhado porque faz parte tanto da experiencia do usuario quanto das funcionalidades disponiveis para a administracao.
+
+Testes de seguranca realizados:
+
+- usuario deslogado tentando acessar `/admin.html`: bloqueado
+- usuario deslogado tentando acessar `/usuario.html`: bloqueado
+- USER autenticado tentando acessar `/admin.html`: bloqueado com HTTP 403
+- ADMIN acessando `/usuario.html`: falha identificada antes da correcao
+
+A nova configuracao foi compilada localmente com sucesso utilizando:
+
+`gradlew compileJava`
+
+Resultado:
+
+`BUILD SUCCESSFUL`
+
+Apos o deploy, devera ser validado que ADMIN tambem nao consegue mais acessar diretamente as rotas exclusivas de USER.
+

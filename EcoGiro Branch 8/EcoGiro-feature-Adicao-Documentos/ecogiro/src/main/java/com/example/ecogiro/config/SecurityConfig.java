@@ -38,7 +38,16 @@ public class SecurityConfig {
                     "/api/recommendations", "/h2-console/**", "/error", "/favicon.ico"
                 ).permitAll()
                 .requestMatchers("/admin.html", "/api/admin/**").hasRole(Role.ADMIN.name())
-                .requestMatchers("/usuario.html", "/planos-aluguel.html", "/mapa.html", "/api/user/**", "/api/map/**").authenticated()
+                .requestMatchers(
+                    "/usuario.html",
+                    "/planos-aluguel.html",
+                    "/api/user/**"
+                ).hasRole(Role.USER.name())
+
+                .requestMatchers(
+                    "/mapa.html",
+                    "/api/map/**"
+                ).authenticated()
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form
