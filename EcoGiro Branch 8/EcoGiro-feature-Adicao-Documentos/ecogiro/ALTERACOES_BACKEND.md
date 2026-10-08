@@ -510,3 +510,20 @@ Nao confundir esta especificacao com recursos ja publicados ou testados.
 ### Comunicacao
 
 Ao final de cada entrega, preparar uma mensagem curta de WhatsApp distinguindo recursos concluidos, recursos pendentes e testes realizados, para compartilhamento com a equipe.
+
+---
+
+## 22. Primeira entrega de modelagem de setores e lojas (08/10/2026)
+
+**Implementado na branch `branch10---erros-corrigidos`:**
+
+- `AdministrativeSector` / `tb_setor_administrativo`: identificador, codigo unico, nome e status.
+- `EcoGiroStore` / `tb_loja_ecogiro`: codigo unico, nome, coordenadas, status e referencia obrigatoria a setor.
+- `AdministratorSectorAssignment` / `tb_atribuicao_setor`: referencia a conta existente em `TB_USUARIO`, setor e data de atribuicao; impede duplicidade do par administrador/setor.
+- Interfaces Spring Data JPA para as tres entidades.
+
+**Limites desta entrega:** nao ha endpoints, interfaces de operacao, atribuicao automatica, auditoria de aprovacao, integracao de veiculos a lojas ou verificacao de perfil ADMIN_GERAL/ADMIN_SETORIAL. As entidades nao alteram as permissoes atuais, nao criam usuarios e nao migram registros existentes. A atribuicao deve ser autorizada pelo backend em etapa posterior.
+
+**Validacoes pendentes:** compilacao Gradle Java 21, migracao do esquema no ambiente de testes, revisao de indices e constraints, integridade referencial e testes de seguranca. Com `spring.jpa.hibernate.ddl-auto=update`, novas tabelas poderao ser criadas quando o backend for implantado; conferir primeiro a configuracao de deploy e fazer backup do banco antes de publicar.
+
+**Proximos passos:** definir ADMIN_GERAL/ADMIN_SETORIAL e estrategia de migracao sem perda de acesso; introduzir propostas de distribuicao com aprovacao auditavel; construir API e interface de mapa administrativo; integrar dados de congestionamento e rotas alternativas.
