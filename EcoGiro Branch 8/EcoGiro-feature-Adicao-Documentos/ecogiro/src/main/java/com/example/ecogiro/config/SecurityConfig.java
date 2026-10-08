@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/admin.html",
                     "/api/admin/**"
-                ).hasRole(Role.ADMIN.name())
+                ).hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMIN_GERAL", "ROLE_ADMIN_SETORIAL")
 
                 // Rotas exclusivas de USER
                 .requestMatchers(
