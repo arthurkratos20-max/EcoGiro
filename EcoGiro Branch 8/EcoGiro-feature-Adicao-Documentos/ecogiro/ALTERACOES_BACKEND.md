@@ -566,3 +566,37 @@ Criados os arquivos SectorRedistributionProposal.java, SectorRedistributionPropo
 A entidade guarda setor, administrador de origem (opcional), administrador de destino, solicitante, decisor, justificativa, estado PENDING/APPROVED/REJECTED/CANCELLED e datas de criacao/decisao. GET /api/admin/redistribution-proposals/pending lista propostas pendentes somente para ADMIN_GERAL ativo, usando DTO sem expor dados pessoais.
 
 **Ainda nao implementado:** criacao e aprovacao/rejeicao de propostas, alteracao real de atribuicoes, bootstrap do primeiro ADMIN_GERAL e protecao territorial de endpoints legados. Sem operacoes de escrita nesta etapa. O esquema pode ser criado pelo Hibernate em proximo deploy conforme configuracao ddl-auto; realizar backup e homologacao antes de publicar. Compilacao, testes e deploy pendentes.
+
+
+---
+
+## 27. Criacao, aprovacao e rejeicao de redistribuicoes (08/10/2026)
+
+**Codigo implementado nesta branch (nao implantado):**
+
+- `SectorRedistributionService`: cria proposta de alteracao de responsavel por setor e realiza decisao transacional.
+- `POST /api/admin/redistribution-proposals`: cria proposta; corpo JSON: `sectorId`, `toAdministratorId`, `reason`.
+- `POST /api/admin/redistribution-proposals/{id}/approve`: aprova e aplica atribuicao, com verificacao da origem esperada.
+- `POST /api/admin/redistribution-proposals/{id}/reject`: rejeita sem alterar atribuicao.
+- `GET /api/admin/redistribution-proposals/csrf`: obtem cabecalho e token CSRF para chamadas de escrita autenticadas.
+- Todas as operacoes exigem conta ativa `ADMIN_GERAL` no banco, nao apenas uma autoridade de sessao.
+- O destino de uma redistribuicao deve ser `ADMIN_SETORIAL` ativo.
+- A criacao bloqueia o registro do setor, recusa multiplos responsaveis e propostas pendentes duplicadas; a decisao bloqueia proposta e setor, impede decisao repetida e verifica se atribuicao atual ainda corresponde a origem.
+- A decisao registra `decidedBy` e `decidedAt` para auditoria. A exclusao da atribuicao anterior e inclusao da nova ocorrem na mesma transacao.
+- As novas requisicoes POST usam protecao CSRF com cookie/token; os formularios antigos permanecem temporariamente sem CSRF para compatibilidade. **Este risco legado deve ser corrigido antes de homologacao final.**
+- Incluidos tres testes automatizados de autorizacao/decisao repetida em `SectorRedistributionServiceTest` (arquivos criados, testes nao executados).
+
+**Bloqueadores antes do deploy de producao:**
+
+1. Executar `gradlew test` e `gradlew build` em Java 21. Confirmar compilacao Spring Boot e testes de integracao com H2 e PostgreSQL.
+2. Fazer backup do Neon e aplicar/modelar migracoes de banco de maneira controlada: atualmente `spring.jpa.hibernate.ddl-auto=update` pode criar tabelas automaticamente no startup.
+3. Os endpoints administrativos antigos ainda aceitam `ROLE_ADMIN` de compatibilidade para `ADMIN_SETORIAL`, sem filtrar por setor. Corrigir antes de habilitar administradores setoriais em producao.
+4. Definir a conta existente que recebera `ADMIN_GERAL`; a atribuicao inicial de proprietario exige confirmacao humana e procedimento auditavel. **Nao ha promocao automatica.**
+5. Configurar `ADMIN_REGISTRATION_CODE` privado no Render e eliminar o valor-padrao inseguro depois de verificar a configuracao real; nao enviar segredos em conversas.
+6. Implementar UI administrativa para revisar e aprovar propostas, associar lojas/veiculos a setores e revisar o fluxo de cadastro. Os dados de congestionamento e rotas alternativas dependem de integracao de trafego.
+7. Adicionar testes concorrentes reais, protecao CSRF nos formularios antigos, validacao de origem de requisicoes e monitoramento das operacoes administrativas.
+
+**Estado:** alteracoes enviadas somente a `branch10---erros-corrigidos` no fork do projeto. Nenhum deploy Render, alteracao manual no Neon, merge em Main ou atualizacao no repositorio de terceiros foi realizada nesta entrega.
+
+**IDE / stack para informacao da equipe:** Visual Studio Code (VS Code), backend Java 21 / Spring Boot 4 / Gradle; PostgreSQL no Neon, Render (Docker) e Cloudflare Worker no acesso web. A IDE nao e requisito exclusivo; Eclipse ou IntelliJ podem importar o projeto Gradle.
+
