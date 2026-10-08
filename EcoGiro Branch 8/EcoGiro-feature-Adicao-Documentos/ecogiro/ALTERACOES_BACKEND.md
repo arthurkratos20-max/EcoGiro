@@ -547,3 +547,8 @@ Ao final de cada entrega, preparar uma mensagem curta de WhatsApp distinguindo r
 - Compilacao, testes automatizados e deploy **nao executados nesta etapa**.
 
 **Proxima entrega:** impor controle de acesso por setor no backend e proposta de distribuicao sujeita a aprovacao do ADMIN_GERAL. Revisar e testar o login dos perfis antigos antes de deploy.
+
+
+## 24. Consulta territorial (08/10/2026)
+
+Criado GET /api/admin/sectors. ADMIN_GERAL consulta todos os setores; ADMIN_SETORIAL consulta os setores atribuidos; ADMIN legado recebe 403 nesta nova rota. Endpoint somente leitura. Compilacao, testes e deploy pendentes. Os endpoints administrativos antigos ainda exigem isolamento territorial antes do uso operacional.
