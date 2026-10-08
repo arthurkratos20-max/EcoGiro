@@ -527,3 +527,23 @@ Ao final de cada entrega, preparar uma mensagem curta de WhatsApp distinguindo r
 **Validacoes pendentes:** compilacao Gradle Java 21, migracao do esquema no ambiente de testes, revisao de indices e constraints, integridade referencial e testes de seguranca. Com `spring.jpa.hibernate.ddl-auto=update`, novas tabelas poderao ser criadas quando o backend for implantado; conferir primeiro a configuracao de deploy e fazer backup do banco antes de publicar.
 
 **Proximos passos:** definir ADMIN_GERAL/ADMIN_SETORIAL e estrategia de migracao sem perda de acesso; introduzir propostas de distribuicao com aprovacao auditavel; construir API e interface de mapa administrativo; integrar dados de congestionamento e rotas alternativas.
+
+---
+
+## 23. Preparacao dos perfis administrativos (08/10/2026)
+
+**Implementado no codigo, nao validado por compilacao ou deploy:**
+- `Role` inclui `ADMIN_GERAL` e `ADMIN_SETORIAL` e preserva `ADMIN` legado.
+- `CustomUserDetailsService` fornece `ROLE_ADMIN` de compatibilidade para contas com perfil administrativo e tambem a autoridade especifica do perfil.
+- `SecurityConfig` aceita os tres perfis administrativos nas rotas administrativas existentes.
+- Novo cadastro via `/admin/register` passa a gerar `ADMIN_SETORIAL`, nao `ADMIN_GERAL`.
+- Contas `ADMIN` existentes continuam com o valor original; nenhuma conta foi promovida ou migrada.
+
+**Limitacoes e seguranca:**
+- A permissao `ROLE_ADMIN` de compatibilidade ainda permite a ADMIN_SETORIAL acessar os endpoints administrativos legados sem filtro territorial. Nao publicar como controle setorial finalizado.
+- Ainda nao existe fluxo seguro de criacao/promocao de ADMIN_GERAL. Implementar designacao controlada por operador autorizado e auditoria, nunca promocao automatica pelo formulario publico.
+- O segredo `ADMIN_REGISTRATION_CODE` precisa ser configurado no Render; retirar o fallback de desenvolvimento antes da abertura publica do cadastro.
+- Faltam regras de escopo por setor no service/repository, endpoints de aprovacao, associacao de veiculos a lojas, testes e migracao.
+- Compilacao, testes automatizados e deploy **nao executados nesta etapa**.
+
+**Proxima entrega:** impor controle de acesso por setor no backend e proposta de distribuicao sujeita a aprovacao do ADMIN_GERAL. Revisar e testar o login dos perfis antigos antes de deploy.
