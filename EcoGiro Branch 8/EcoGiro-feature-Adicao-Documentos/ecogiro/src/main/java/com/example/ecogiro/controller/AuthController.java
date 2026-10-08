@@ -59,7 +59,7 @@ public class AuthController {
             return;
         }
         try {
-            authService.register(fullName, cpf, age, email, password, Role.ADMIN);
+            authService.register(fullName, cpf, age, email, password, Role.ADMIN_SETORIAL);
             response.sendRedirect("/admin-login.html?registered=1");
         } catch (IllegalArgumentException ex) {
             response.sendRedirect("/admin-cadastro.html?error=" + urlCode(ex.getMessage()));
