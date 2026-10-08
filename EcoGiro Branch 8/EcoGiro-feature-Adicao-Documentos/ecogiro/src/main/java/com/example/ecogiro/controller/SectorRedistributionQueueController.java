@@ -5,6 +5,8 @@ import com.example.ecogiro.model.Role;
 import com.example.ecogiro.model.SectorRedistributionProposal;
 import com.example.ecogiro.repository.AppUserRepository;
 import com.example.ecogiro.repository.SectorRedistributionProposalRepository;
+import com.example.ecogiro.service.SectorRedistributionService;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,17 +20,59 @@ import java.util.List;
 public class SectorRedistributionQueueController {
     private final AppUserRepository users;
     private final SectorRedistributionProposalRepository proposals;
+    private final SectorRedistributionService distribution;
 
     public SectorRedistributionQueueController(
-            AppUserRepository users, SectorRedistributionProposalRepository proposals) {
+            AppUserRepository users, SectorRedistributionProposalRepository proposals,
+            SectorRedistributionService distribution) {
         this.users = users;
         this.proposals = proposals;
+        this.distribution = distribution;
     }
 
     public record ProposalView(Long id, Long sectorId, String sectorName,
                                Long fromAdministratorId, Long toAdministratorId,
                                Long requestedById, String reason, String status,
                                LocalDateTime createdAt) {}
+
+
+    public record ProposalRequest(Long sectorId, Long toAdministratorId, String reason) {}
+    public record ProposalCreated(Long proposalId) {}
+    public record CsrfResponse(String headerName, String token) {}
+
+    @GetMapping("/csrf")
+    public CsrfResponse csrf(Authentication authentication, CsrfToken csrfToken) {
+        requireGeneral(authentication);
+        return new CsrfResponse(csrfToken.getHeaderName(), csrfToken.getToken());
+    }
+
+    @PostMapping
+    public ProposalCreated create(Authentication authentication, @RequestBody ProposalRequest request) {
+        requireGeneral(authentication);
+        if (request == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        return new ProposalCreated(distribution.create(authentication,
+                request.sectorId(), request.toAdministratorId(), request.reason()));
+    }
+
+    @PostMapping("/{id}/approve")
+    public void approve(Authentication authentication, @PathVariable Long id) {
+        requireGeneral(authentication);
+        distribution.decide(authentication, id, true);
+    }
+
+    @PostMapping("/{id}/reject")
+    public void reject(Authentication authentication, @PathVariable Long id) {
+        requireGeneral(authentication);
+        distribution.decide(authentication, id, false);
+    }
+
+    private void requireGeneral(Authentication authentication) {
+        if (authentication == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        AppUser actor = users.findByEmailIgnoreCase(authentication.getName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        if (!actor.isActive() || actor.getRole() != Role.ADMIN_GERAL)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
 
     @GetMapping("/pending")
     @Transactional(readOnly = true)
