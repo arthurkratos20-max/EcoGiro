@@ -23,9 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return User.withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(user.getRole().isAdministrator()
-                        ? new String[]{"ROLE_ADMIN", "ROLE_" + user.getRole().name()}
-                        : new String[]{"ROLE_USER"})
+                .authorities(user.getRole() == com.example.ecogiro.model.Role.ADMIN
+                        ? new String[]{"ROLE_ADMIN", "ROLE_ADMIN_LEGACY"}
+                        : user.getRole().isAdministrator()
+                            ? new String[]{"ROLE_ADMIN", "ROLE_" + user.getRole().name()}
+                            : new String[]{"ROLE_USER"})
                 .disabled(!user.isActive())
                 .build();
     }
