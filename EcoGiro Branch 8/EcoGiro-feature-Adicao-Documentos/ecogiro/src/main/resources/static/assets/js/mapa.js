@@ -27,3 +27,23 @@ function render(){
 $('#map-filter').addEventListener('click', e=>{ const btn=e.target.closest('button[data-type]'); if(!btn)return; $('#map-filter').querySelectorAll('button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentFilter=btn.dataset.type; render(); });
 function showToast(message,error=false){const el=$('#toast');el.textContent=message;el.className='toast show'+(error?' error':'');setTimeout(()=>el.className='toast',3500)}
 loadVehicles();
+
+// Ajusta a navegação do mapa ao perfil autenticado sem alterar as permissões do servidor.
+(async function configureMapNavigation() {
+  const admin = document.getElementById('map-account-link');
+  const user = document.getElementById('map-user-account-link');
+  const plans = document.getElementById('map-plans-link');
+  try {
+    const response = await fetch('/api/admin/summary', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
+    if (response.ok) {
+      admin.hidden = false;
+    } else if (response.status === 403) {
+      user.hidden = false;
+      plans.hidden = false;
+    } else {
+      showToast('Não foi possível identificar o perfil da conta.', true);
+    }
+  } catch (error) {
+    showToast('Não foi possível identificar o perfil da conta.', true);
+  }
+})();
