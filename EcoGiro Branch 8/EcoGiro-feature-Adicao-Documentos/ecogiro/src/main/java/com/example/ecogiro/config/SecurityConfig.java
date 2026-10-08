@@ -76,6 +76,9 @@ public class SecurityConfig {
                                  "/api/admin/sector-distribution/**")
                 .hasAuthority("ROLE_ADMIN_GERAL")
 
+                // Painel setorial dedicado: nao oferece operacoes globais.
+                .requestMatchers("/admin-setorial.html").hasAuthority("ROLE_ADMIN_SETORIAL")
+
                 // Painel legado ainda mostra dados globais: bloquear ADMIN_SETORIAL.
                 .requestMatchers("/admin.html", "/api/admin/**")
                 .hasAnyAuthority("ROLE_ADMIN_GERAL", "ROLE_ADMIN_LEGACY")
