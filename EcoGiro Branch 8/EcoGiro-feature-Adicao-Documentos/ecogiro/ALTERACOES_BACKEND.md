@@ -557,3 +557,12 @@ Criado GET /api/admin/sectors. ADMIN_GERAL consulta todos os setores; ADMIN_SETO
 ## 25. Previa de redistribuicao de setores (08/10/2026)
 
 Criado SectorDistributionPreviewController, endpoint GET /api/admin/sector-distribution/preview. Exige ADMIN_GERAL ativo e devolve sugestoes sem gravar mudancas. Considera administradores setoriais ativos, setores ativos, atribuicoes atuais e setores sem responsavel. A heuristica preliminar equilibra quantidade de setores, nao frota, lojas, demanda ou congestionamento. Nao existe aprovacao ou aplicacao nesta entrega. Sem administrador geral configurado, a rota responde 403; sem administradores setoriais, nao gera transferencias. Compilacao, testes e deploy pendentes. Antes de producao, validar dados inconsistentes (setor atribuido a multiplos administradores), revisao de permissoes legadas e migracao segura.
+
+
+## 26. Estrutura para propostas de redistribuicao (08/10/2026)
+
+Criados os arquivos SectorRedistributionProposal.java, SectorRedistributionProposalRepository.java e SectorRedistributionQueueController.java.
+
+A entidade guarda setor, administrador de origem (opcional), administrador de destino, solicitante, decisor, justificativa, estado PENDING/APPROVED/REJECTED/CANCELLED e datas de criacao/decisao. GET /api/admin/redistribution-proposals/pending lista propostas pendentes somente para ADMIN_GERAL ativo, usando DTO sem expor dados pessoais.
+
+**Ainda nao implementado:** criacao e aprovacao/rejeicao de propostas, alteracao real de atribuicoes, bootstrap do primeiro ADMIN_GERAL e protecao territorial de endpoints legados. Sem operacoes de escrita nesta etapa. O esquema pode ser criado pelo Hibernate em proximo deploy conforme configuracao ddl-auto; realizar backup e homologacao antes de publicar. Compilacao, testes e deploy pendentes.
