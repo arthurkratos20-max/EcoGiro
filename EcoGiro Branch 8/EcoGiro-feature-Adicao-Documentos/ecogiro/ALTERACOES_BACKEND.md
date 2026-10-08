@@ -600,3 +600,27 @@ A entidade guarda setor, administrador de origem (opcional), administrador de de
 
 **IDE / stack para informacao da equipe:** Visual Studio Code (VS Code), backend Java 21 / Spring Boot 4 / Gradle; PostgreSQL no Neon, Render (Docker) e Cloudflare Worker no acesso web. A IDE nao e requisito exclusivo; Eclipse ou IntelliJ podem importar o projeto Gradle.
 
+
+
+---
+
+## 28. Isolamento da interface do ADMIN_SETORIAL e integracao de login (08/10/2026)
+
+**Implementado no codigo, nao testado em execucao:**
+
+- `CustomUserDetailsService` adiciona autoridade `ROLE_ADMIN_LEGACY` apenas a contas ADMIN antigas; conserva `ROLE_ADMIN` para o login administrativo existente.
+- `SecurityConfig` permite leitura `GET /api/admin/sectors` a ADMIN_SETORIAL e ADMIN_GERAL; endpoints de propostas e simulacao de redistribuicao exigem ADMIN_GERAL; `/admin.html` e as demais rotas `/api/admin/**` legadas aceitam somente ADMIN_GERAL e ADMIN legado (via ROLE_ADMIN_LEGACY), nao ADMIN_SETORIAL.
+- Criada pagina `admin-setorial.html` e script `assets/js/admin-setorial.js`, com lista de setores atribuídos somente leitura e aviso de funcionalidades pendentes.
+- Login administrativo redireciona ADMIN_SETORIAL para `/admin-setorial.html`; ADMIN_GERAL e ADMIN legado seguem para `/admin.html`.
+- Menu de `mapa.html` e `mapa.js` identifica conta setorial e apresenta link `Meus setores` em vez de exibir links de usuario comum que retornariam 403.
+
+**Limitacoes relevantes:**
+
+- Tela e consulta setorial nao conferem ainda gerenciamento de lojas ou veiculos; o mapa compartilhado nao filtra veiculos territorialmente, e a interface administrativa completa nao foi criada.
+- E necessario criar e migrar o primeiro ADMIN_GERAL a partir de conta designada pelo responsavel do projeto, sob procedimento de autorizacao e auditoria. Esta etapa nao foi realizada.
+- A administracao legada permanece disponivel a ADMIN antigo; revisar os papeis em banco e os endpoints globais antes de uso multiadministrador.
+- Build/testes de integracao, tests de autorizacao, deploy Render e validacao no Neon estao pendentes.
+- Endpoints de criacao e decisao de propostas requerem token CSRF obtido do novo endpoint de CSRF e sessao administrativa valida.
+- A aplicacao usa `ddl-auto=update`; proteger o Neon com backup e teste de migracao antes de deploy.
+
+**Entrega da equipe:** desenvolver no Visual Studio Code (VS Code), projeto Java 21 / Spring Boot 4.1.1 / Gradle; infraestrutura: Neon PostgreSQL, Render Docker, Cloudflare Worker. O projeto Gradle tambem pode ser importado em Eclipse ou IntelliJ.
