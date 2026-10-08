@@ -468,3 +468,45 @@ O endereco funcional da aplicacao atraves da infraestrutura Cloudflare passa a s
 ## 20. Correcao da navegacao do mapa para administradores
 
 O mapa compartilhado apresentava menu fixo de usuario e apontava para `/usuario.html`, rota exclusiva de USER, causando HTTP 403 ao retornar para a conta administrativa. O menu do mapa passou a consultar `/api/admin/summary` para identificar o perfil autenticado: ADMIN recebe link para `/admin.html`; USER recebe links para `/usuario.html` e `/planos-aluguel.html`. Em erros inesperados os links de conta ficam ocultos. Nao foram alteradas as regras de seguranca do backend. Validacao em producao pendente.
+
+---
+
+## 21. Plano aprovado - central administrativa, lojas e distribuicao inteligente de setores (08/10/2026)
+
+**Estado: requisitos aprovados e documentados; implementacao funcional ainda pendente.**
+Nao confundir esta especificacao com recursos ja publicados ou testados.
+
+### Decisoes aprovadas
+
+- O mapa de USER permanece voltado a consulta de veiculos, disponibilidade e rotas.
+- O mapa de ADMIN sera uma interface propria de operacao: lojas EcoGiro clicaveis, veiculos associados, disponibilidade, realocacao, destino e trajetos.
+- Trajetos que atravessam areas congestionadas devem ser avaliados; se a regra de restricao for acionada, exibir o motivo e propor rota alternativa.
+- Congestionamento real exige provedor de dados de trafego; sem esse provedor, a interface deve distinguir simulacao ou informacao desatualizada de condicao verificada em tempo real.
+- Setores territoriais terao administradores responsaveis. A distribuicao buscara equilibrio por carga operacional (lojas, frota, demanda e ocorrencias), nao apenas numero de setores.
+- A entrada de um administrador novo gera **proposta**, sem redistribuir automaticamente setores existentes.
+- Um ADMIN_GERAL podera aprovar, ajustar ou rejeitar a proposta. ADMIN_SETORIAL gerenciara apenas setores designados.
+- Desativacao ou ausencia de responsavel exige proposta de redistribuicao; manter historico e auditoria.
+- Preservar USER e ADMIN atuais ate haver migracao controlada e autorizada, sem promocao automatica de contas.
+
+### Etapas previstas
+
+1. Modelagem de setores, lojas, vinculos de veiculos, atribuicoes de administradores, propostas e historico de aprovacoes; migracoes de banco seguras e reversiveis.
+2. Politica de autorizacao ADMIN_GERAL / ADMIN_SETORIAL com estrategia explicita de bootstrap do primeiro administrador geral e migracao das contas ADMIN existentes.
+3. API de setores, capacidade/carga, recomendacoes de redistribuicao e aprovacao transacional com auditoria e verificacao de conflitos.
+4. Mapa administrativo dedicado com selecao de loja, gerenciamento de frota e visualizacao dos setores atribuidos; manter o mapa USER isolado.
+5. Servico de rotas e restricoes de congestionamento com fonte de dados, limites, fallback e explicacoes das alternativas.
+6. Testes de papeis, limites territoriais, concorrencia de aprovacoes, rotas, integridade do banco e regressao de login; deploy controlado Render/Cloudflare/Neon.
+
+### Criterios de aceite
+
+- USER nao visualiza nem executa operacoes administrativas.
+- ADMIN_SETORIAL nao modifica setores de outros administradores.
+- ADMIN_GERAL consegue revisar e decidir propostas, com registro de quem decidiu e quando.
+- Cadastro de novo administrador nao altera distribuicao em vigor sem aprovacao.
+- Rotas alternativas sao exibidas com motivo e origem dos dados de congestionamento.
+- Nao apagar ou reatribuir contas e veiculos existentes sem migracao validada.
+- Registrar no presente documento cada implementacao, commit, teste, deploy e pendencia.
+
+### Comunicacao
+
+Ao final de cada entrega, preparar uma mensagem curta de WhatsApp distinguindo recursos concluidos, recursos pendentes e testes realizados, para compartilhamento com a equipe.
