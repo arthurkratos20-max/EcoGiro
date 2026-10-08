@@ -7,4 +7,5 @@ import java.util.List;
 public interface AdministratorSectorAssignmentRepository extends JpaRepository<AdministratorSectorAssignment, Long> {
     List<AdministratorSectorAssignment> findByAdministratorId(Long administratorId);
     List<AdministratorSectorAssignment> findBySectorId(Long sectorId);
+    void deleteBySectorId(Long sectorId);
 }
