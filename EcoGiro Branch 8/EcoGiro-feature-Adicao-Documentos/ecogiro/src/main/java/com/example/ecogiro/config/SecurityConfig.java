@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 public class SecurityConfig {
@@ -30,7 +31,14 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf
+                // Mantem compatibilidade com formularios antigos; protege novas escritas setoriais.
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .requireCsrfProtectionMatcher(request ->
+                    "POST".equalsIgnoreCase(request.getMethod())
+                    && (request.getRequestURI().equals("/api/admin/redistribution-proposals")
+                        || request.getRequestURI().startsWith("/api/admin/redistribution-proposals/")))
+            )
 
             .headers(headers ->
                 headers.frameOptions(frame -> frame.sameOrigin())
