@@ -462,3 +462,9 @@ permanece como publicacao estatica/legada do frontend. Como nao executa o backen
 
 O endereco funcional da aplicacao atraves da infraestrutura Cloudflare passa a ser o dominio `workers.dev` do Worker `ecogiro-proxy`.
 
+
+---
+
+## 20. Correcao da navegacao do mapa para administradores
+
+O mapa compartilhado apresentava menu fixo de usuario e apontava para `/usuario.html`, rota exclusiva de USER, causando HTTP 403 ao retornar para a conta administrativa. O menu do mapa passou a consultar `/api/admin/summary` para identificar o perfil autenticado: ADMIN recebe link para `/admin.html`; USER recebe links para `/usuario.html` e `/planos-aluguel.html`. Em erros inesperados os links de conta ficam ocultos. Nao foram alteradas as regras de seguranca do backend. Validacao em producao pendente.
