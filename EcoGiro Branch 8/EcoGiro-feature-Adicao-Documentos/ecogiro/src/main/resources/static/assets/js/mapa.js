@@ -31,6 +31,7 @@ loadVehicles();
 // Ajusta a navegação do mapa ao perfil autenticado sem alterar as permissões do servidor.
 (async function configureMapNavigation() {
   const admin = document.getElementById('map-account-link');
+  const sector = document.getElementById('map-sector-account-link');
   const user = document.getElementById('map-user-account-link');
   const plans = document.getElementById('map-plans-link');
   try {
@@ -38,8 +39,15 @@ loadVehicles();
     if (response.ok) {
       admin.hidden = false;
     } else if (response.status === 403) {
-      user.hidden = false;
-      plans.hidden = false;
+      const sectorResponse = await fetch('/api/admin/sectors', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
+      if (sectorResponse.ok) {
+        sector.hidden = false;
+      } else if (sectorResponse.status === 403) {
+        user.hidden = false;
+        plans.hidden = false;
+      } else {
+        showToast('Não foi possível identificar o perfil da conta.', true);
+      }
     } else {
       showToast('Não foi possível identificar o perfil da conta.', true);
     }
