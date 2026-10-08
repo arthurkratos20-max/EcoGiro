@@ -66,11 +66,19 @@ public class SecurityConfig {
                     "/favicon.ico"
                 ).permitAll()
 
-                // Rotas exclusivas de ADMIN
-                .requestMatchers(
-                    "/admin.html",
-                    "/api/admin/**"
-                ).hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMIN_GERAL", "ROLE_ADMIN_SETORIAL")
+                // Setores: leitura do proprio territorio para ADMIN_SETORIAL.
+                .requestMatchers("/api/admin/sectors")
+                .hasAnyAuthority("ROLE_ADMIN_GERAL", "ROLE_ADMIN_SETORIAL")
+
+                // Propostas e distribuicao: apenas administrador geral.
+                .requestMatchers("/api/admin/redistribution-proposals/**",
+                                 "/api/admin/redistribution-proposals",
+                                 "/api/admin/sector-distribution/**")
+                .hasAuthority("ROLE_ADMIN_GERAL")
+
+                // Painel legado ainda mostra dados globais: bloquear ADMIN_SETORIAL.
+                .requestMatchers("/admin.html", "/api/admin/**")
+                .hasAnyAuthority("ROLE_ADMIN_GERAL", "ROLE_ADMIN_LEGACY")
 
                 // Rotas exclusivas de USER
                 .requestMatchers(
