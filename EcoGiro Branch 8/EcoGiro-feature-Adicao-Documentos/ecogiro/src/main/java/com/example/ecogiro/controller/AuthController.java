@@ -87,7 +87,9 @@ public class AuthController {
             SecurityContextHolder.setContext(context);
             HttpSessionSecurityContextRepository contextRepository = new HttpSessionSecurityContextRepository();
             contextRepository.saveContext(context, request, response);
-            response.sendRedirect("/admin.html");
+            boolean isSectorial = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN_SETORIAL"));
+            response.sendRedirect(isSectorial ? "/admin-setorial.html" : "/admin.html");
         } catch (AuthenticationException ex) {
             response.sendRedirect("/admin-login.html?error=1");
         }
