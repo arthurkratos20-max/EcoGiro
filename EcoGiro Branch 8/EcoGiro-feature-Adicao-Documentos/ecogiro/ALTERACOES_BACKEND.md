@@ -552,3 +552,8 @@ Ao final de cada entrega, preparar uma mensagem curta de WhatsApp distinguindo r
 ## 24. Consulta territorial (08/10/2026)
 
 Criado GET /api/admin/sectors. ADMIN_GERAL consulta todos os setores; ADMIN_SETORIAL consulta os setores atribuidos; ADMIN legado recebe 403 nesta nova rota. Endpoint somente leitura. Compilacao, testes e deploy pendentes. Os endpoints administrativos antigos ainda exigem isolamento territorial antes do uso operacional.
+
+
+## 25. Previa de redistribuicao de setores (08/10/2026)
+
+Criado SectorDistributionPreviewController, endpoint GET /api/admin/sector-distribution/preview. Exige ADMIN_GERAL ativo e devolve sugestoes sem gravar mudancas. Considera administradores setoriais ativos, setores ativos, atribuicoes atuais e setores sem responsavel. A heuristica preliminar equilibra quantidade de setores, nao frota, lojas, demanda ou congestionamento. Nao existe aprovacao ou aplicacao nesta entrega. Sem administrador geral configurado, a rota responde 403; sem administradores setoriais, nao gera transferencias. Compilacao, testes e deploy pendentes. Antes de producao, validar dados inconsistentes (setor atribuido a multiplos administradores), revisao de permissoes legadas e migracao segura.
