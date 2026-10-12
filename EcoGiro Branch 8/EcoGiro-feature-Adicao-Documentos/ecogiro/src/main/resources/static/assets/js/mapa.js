@@ -26,32 +26,34 @@ function render(){
 }
 $('#map-filter').addEventListener('click', e=>{ const btn=e.target.closest('button[data-type]'); if(!btn)return; $('#map-filter').querySelectorAll('button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentFilter=btn.dataset.type; render(); });
 function showToast(message,error=false){const el=$('#toast');el.textContent=message;el.className='toast show'+(error?' error':'');setTimeout(()=>el.className='toast',3500)}
-loadVehicles();
-
-// Ajusta a navegação do mapa ao perfil autenticado sem alterar as permissões do servidor.
-(async function configureMapNavigation() {
-  const admin = document.getElementById('map-account-link');
-  const sector = document.getElementById('map-sector-account-link');
-  const user = document.getElementById('map-user-account-link');
-  const plans = document.getElementById('map-plans-link');
+// O perfil vem da sessão, nunca de tentativas de acesso a APIs administrativas.
+async function configureMapNavigation() {
   try {
-    const response = await fetch('/api/admin/summary', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
-    if (response.ok) {
-      admin.hidden = false;
-    } else if (response.status === 403) {
-      const sectorResponse = await fetch('/api/admin/sectors', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
-      if (sectorResponse.ok) {
-        sector.hidden = false;
-      } else if (sectorResponse.status === 403) {
-        user.hidden = false;
-        plans.hidden = false;
-      } else {
-        showToast('Não foi possível identificar o perfil da conta.', true);
-      }
-    } else {
-      showToast('Não foi possível identificar o perfil da conta.', true);
+    const response = await fetch('/api/session/profile', {
+      credentials: 'same-origin', headers: { Accept: 'application/json' }
+    });
+    if (response.status === 401 || response.redirected) {
+      window.location.replace(document.body.dataset.mapProfile === 'ADMIN'
+        ? '/admin-login.html' : '/login.html');
+      return;
     }
+    if (!response.ok) throw new Error('Não foi possível identificar o perfil da conta.');
+    const { role } = await response.json();
+    const isAdmin = ['ADMIN', 'ADMIN_GERAL', 'ADMIN_SETORIAL'].includes(role);
+    if (!isAdmin && role !== 'USER') throw new Error('Perfil de conta não reconhecido.');
+    const target = isAdmin ? 'ADMIN' : 'USER';
+    if (document.body.dataset.mapProfile !== target) {
+      window.location.replace(isAdmin ? '/mapa-admin.html' : '/mapa.html');
+      return;
+    }
+    if (role === 'ADMIN_SETORIAL') {
+      const link = document.getElementById('map-account-link');
+      link.href = 'admin-setorial.html';
+      link.textContent = 'Meus setores';
+    }
+    await loadVehicles();
   } catch (error) {
-    showToast('Não foi possível identificar o perfil da conta.', true);
+    showToast(error.message || 'Não foi possível identificar o perfil da conta.', true);
   }
-})();
+}
+configureMapNavigation();

@@ -76,6 +76,10 @@ public class SecurityConfig {
                                  "/api/admin/sector-distribution/**")
                 .hasAuthority("ROLE_ADMIN_GERAL")
 
+                // Mapa administrativo dedicado, inclusive para contas legadas.
+                .requestMatchers("/mapa-admin.html")
+                .hasAnyAuthority("ROLE_ADMIN_GERAL", "ROLE_ADMIN_SETORIAL", "ROLE_ADMIN_LEGACY")
+
                 // Painel setorial dedicado: nao oferece operacoes globais.
                 .requestMatchers("/admin-setorial.html").hasAuthority("ROLE_ADMIN_SETORIAL")
 
@@ -93,6 +97,7 @@ public class SecurityConfig {
                 // Rotas compartilhadas entre usuários autenticados
                 .requestMatchers(
                     "/mapa.html",
+                    "/api/session/profile",
                     "/api/map/**"
                 ).authenticated()
 
