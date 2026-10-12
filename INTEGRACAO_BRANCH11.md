@@ -42,3 +42,7 @@ A integração transporta o que está implementado na branch 10, não conclui fu
 ## Implantação confirmada no Render — 12/10/2026
 
 Log fornecido pelo desenvolvedor confirma Deploy succeeded | Live para o commit 7a562de. A imagem Docker foi compilada e a aplicação iniciou com conexão PostgreSQL estabelecida pelo HikariPool; Tomcat na porta 10000; Started EcogiroApplication; Your service is live. Endereço: https://ecogiro.onrender.com. Isso confirma build e inicialização do backend, não execução da suíte de testes Java nem homologação dos fluxos da interface. Atualização e verificação do Cloudflare continuam pendentes.
+
+## Publicação confirmada no Cloudflare Pages — 12/10/2026
+
+Captura do painel confirma ambiente Production, branch11---UI/UX-atualizados, commit 23af7bb e status success às 19h35 (America/Sao_Paulo). Deployment ID: e5a4e41e-5fd4-4982-9e8a-bb08b6b5aba3; URL da versão: https://e5a4e41e.ecogiro.pages.dev. Etapas initialize, clone repo, build e deploy concluídas. Configuração orientada: Root directory EcoGiro Branch 11/EcoGiro-feature-Adicao-Documentos/ecogiro, output src/main/resources/static, comando vazio. Publicação confirmada; testes do novo visual, login, sessão e mapa administrativo via domínio público ainda pendentes. O serviço ecogiro-proxy não foi modificado nesta etapa.
