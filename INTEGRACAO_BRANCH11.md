@@ -46,3 +46,7 @@ Log fornecido pelo desenvolvedor confirma Deploy succeeded | Live para o commit 
 ## Publicação confirmada no Cloudflare Pages — 12/10/2026
 
 Captura do painel confirma ambiente Production, branch11---UI/UX-atualizados, commit 23af7bb e status success às 19h35 (America/Sao_Paulo). Deployment ID: e5a4e41e-5fd4-4982-9e8a-bb08b6b5aba3; URL da versão: https://e5a4e41e.ecogiro.pages.dev. Etapas initialize, clone repo, build e deploy concluídas. Configuração orientada: Root directory EcoGiro Branch 11/EcoGiro-feature-Adicao-Documentos/ecogiro, output src/main/resources/static, comando vazio. Publicação confirmada; testes do novo visual, login, sessão e mapa administrativo via domínio público ainda pendentes. O serviço ecogiro-proxy não foi modificado nesta etapa.
+
+## Correção HTTP 405 no login administrativo — 12/10/2026
+
+Captura de homologação mostrou HTTP 405 em POST /admin/login no Pages. Adicionado _worker.js ao diretório de publicação (modo avançado Pages): encaminha /api/*, login/logout, cadastro e páginas protegidas para o Spring Boot; preserva método, corpo, cookies e status; reescreve redirects do Render para o domínio público; assets permanecem no Pages e respostas dinâmicas não são armazenadas em cache. BACKEND_URL opcional, com fallback ao endereço HTTPS atual do Render. Três testes locais aprovados para POST/cookie/redirect, assets e acesso negado. Necessário novo deploy Pages e teste real de login/logout; não modifica o banco nem o Worker ecogiro-proxy existente.
