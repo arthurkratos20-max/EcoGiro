@@ -38,3 +38,7 @@ Com JDK 21, executar gradlew test e validar as telas com USER, ADMIN legado, ADM
 ## Limites que continuam presentes
 
 A integração transporta o que está implementado na branch 10, não conclui funcionalidades apenas planejadas. O painel setorial é somente leitura; o mapa ainda não filtra veículos por território; gerenciamento completo de veículos por loja/setor, roteamento por congestionamento e UI completa de aprovação de redistribuição continuam pendentes, conforme o histórico técnico. Não houve alteração de dados ou credenciais do Neon, nem confirmação de deploy nesta entrega.
+
+## Implantação confirmada no Render — 12/10/2026
+
+Log fornecido pelo desenvolvedor confirma Deploy succeeded | Live para o commit 7a562de. A imagem Docker foi compilada e a aplicação iniciou com conexão PostgreSQL estabelecida pelo HikariPool; Tomcat na porta 10000; Started EcogiroApplication; Your service is live. Endereço: https://ecogiro.onrender.com. Isso confirma build e inicialização do backend, não execução da suíte de testes Java nem homologação dos fluxos da interface. Atualização e verificação do Cloudflare continuam pendentes.
