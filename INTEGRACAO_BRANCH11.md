@@ -50,3 +50,7 @@ Captura do painel confirma ambiente Production, branch11---UI/UX-atualizados, co
 ## Correção HTTP 405 no login administrativo — 12/10/2026
 
 Captura de homologação mostrou HTTP 405 em POST /admin/login no Pages. Adicionado _worker.js ao diretório de publicação (modo avançado Pages): encaminha /api/*, login/logout, cadastro e páginas protegidas para o Spring Boot; preserva método, corpo, cookies e status; reescreve redirects do Render para o domínio público; assets permanecem no Pages e respostas dinâmicas não são armazenadas em cache. BACKEND_URL opcional, com fallback ao endereço HTTPS atual do Render. Três testes locais aprovados para POST/cookie/redirect, assets e acesso negado. Necessário novo deploy Pages e teste real de login/logout; não modifica o banco nem o Worker ecogiro-proxy existente.
+
+## Configuração Pages conferida — 12/10/2026, 20h01
+
+Captura confirma Production branch branch11---UI/UX-atualizados, automatic production deployments habilitado, Root directory EcoGiro Branch 11/EcoGiro-feature-Adicao-Documentos/ecogiro e output src/main/resources/static. Novo commit documental emitido após a conferência para solicitar deploy automático do HEAD que inclui a correção ca09405. Sucesso deste novo deploy e autenticação administrativa ainda devem ser confirmados.
