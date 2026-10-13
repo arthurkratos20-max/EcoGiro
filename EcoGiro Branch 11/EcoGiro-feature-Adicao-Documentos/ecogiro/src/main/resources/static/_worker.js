@@ -1,8 +1,8 @@
 // Cloudflare Pages: encaminha sessão e operações ao Spring Boot.
-const protectedPages = new Set(['/admin', '/admin-setorial', '/mapa-admin', '/usuario', '/planos-aluguel', '/mapa']);
+const protectedPages = new Set(['/operacao', '/admin', '/admin-setorial', '/mapa-admin', '/usuario', '/planos-aluguel', '/mapa']);
 const backendPaths = new Set([
   '/login', '/logout', '/register', '/admin/login', '/admin/register',
-  '/admin.html', '/admin-setorial.html', '/mapa-admin.html',
+  '/operacao.html', '/admin.html', '/admin-setorial.html', '/mapa-admin.html',
   '/usuario.html', '/planos-aluguel.html', '/mapa.html'
 ]);
 export default {

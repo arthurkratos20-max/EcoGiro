@@ -37,7 +37,8 @@ public class SecurityConfig {
                 .requireCsrfProtectionMatcher(request ->
                     "POST".equalsIgnoreCase(request.getMethod())
                     && (request.getRequestURI().equals("/api/admin/redistribution-proposals")
-                        || request.getRequestURI().startsWith("/api/admin/redistribution-proposals/")))
+                        || request.getRequestURI().startsWith("/api/admin/redistribution-proposals/")
+                        || request.getRequestURI().startsWith("/api/admin/operations/")))
             )
 
             .headers(headers ->
@@ -65,6 +66,9 @@ public class SecurityConfig {
                     "/error",
                     "/favicon.ico"
                 ).permitAll()
+
+                .requestMatchers("/operacao.html", "/api/admin/operations/**")
+                .hasAnyAuthority("ROLE_ADMIN_GERAL", "ROLE_ADMIN_SETORIAL", "ROLE_ADMIN_LEGACY")
 
                 // Setores: leitura do proprio territorio para ADMIN_SETORIAL.
                 .requestMatchers("/api/admin/sectors")

@@ -66,3 +66,8 @@ Captura mostrou 404 do Spring Boot em GET /login. O proxy passa a servir GET /lo
 ## Mapa administrativo homologado — 12/10/2026, 21h17
 
 Captura do desenvolvedor confirma https://ecogiro.pages.dev/mapa-admin.html com header Administração / Mapa / Site / Sair, mapa renderizado e 7 veículos exibidos. O problema original de troca do header administrativo pelo de usuário está corrigido no fluxo observado. Retorno ao painel e logout ainda precisam de confirmação; filtros e perfis setoriais não foram homologados nesta captura.
+
+
+## 13/10/2026 — entrega de operação territorial e validação
+
+A nova tela administrativa, vínculo veículo/loja, filtros por setor, limites e bloqueios de destinos e interface de redistribuição estão detalhados em [OPERACAO_TERRITORIAL.md](OPERACAO_TERRITORIAL.md). Essa seção atualiza as pendências anteriores: as operações indicadas agora possuem implementação, mas precisam de validação Java e deploy. Não há confirmação de trânsito em tempo real nem de logout em produção. Testes Node: 16 aprovados localmente.

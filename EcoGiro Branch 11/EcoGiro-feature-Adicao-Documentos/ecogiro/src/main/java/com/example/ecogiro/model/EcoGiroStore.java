@@ -22,6 +22,13 @@ public class EcoGiroStore {
     @Column(nullable = false)
     private boolean active = true;
 
+    private Integer capacity = 20;
+    private Boolean blocked = false;
+    public int getCapacity() { return capacity == null ? 20 : capacity; }
+    public void setCapacity(Integer capacity) { this.capacity = capacity; }
+    public boolean isBlocked() { return Boolean.TRUE.equals(blocked); }
+    public void setBlocked(boolean blocked) { this.blocked = blocked; }
+
     public Long getId() { return id; }
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
