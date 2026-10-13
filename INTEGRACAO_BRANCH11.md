@@ -77,3 +77,16 @@ A nova tela administrativa, vínculo veículo/loja, filtros por setor, limites e
 Em 13/10/2026, GitHub Actions executou Java 21, `test bootJar` e os testes Node com sucesso nas execuções [38329031623](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38329031623) e [38329148732](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38329148732). Foram 16 testes Java e 16 testes Node. O teste de logout no Spring confirmou invalidação da sessão e redirecionamento para novo login; isso encerra a pendência de teste automatizado, sem afirmar confirmação manual em produção. Os relatórios Java estão nos artifacts do Actions.
 
 O código foi primeiro publicado em `validacao/operacao-territorial`; só depois das validações foi preparado para a atualização de `branch11---UI/UX-atualizados`. As novas colunas são opcionais e preservam veículos existentes. A operação setorial requer lojas cadastradas, vínculo dos veículos e setores atribuídos, sem alteração automática de contas ou papéis. Trânsito em tempo real, provisionamento de conta geral, confirmação dos deploys e teste manual do site continuam explicitamente pendentes.
+
+
+## Atualização de homologação — 13/10/2026, 00h13 (Brasília)
+
+As seções anteriores preservam o estado conhecido em cada etapa; a situação atual está detalhada em [OPERACAO_TERRITORIAL.md](OPERACAO_TERRITORIAL.md#estado-atualizado-da-homologação--13102026-00h13-americasao_paulo).
+
+Confirmados pelo responsável: cadastro do setor Centro e loja fictícia de demonstração, tratamento de duplicidade, transferência da ECO-M001 com ocupação 1/20, filtro de destinos por lotação e bloqueio manual, leitura dos mesmos dados pelo Cloudflare e exigência de novo login após logout. A migração do CHECK de perfis no Neon foi executada manualmente; conta principal ADMIN_GERAL provisionada; duas contas ADMIN antigas convertidas pelo responsável em ADMIN_SETORIAL, mantendo credenciais e estado ativo.
+
+Simulação sugeriu atribuição de Brasília — Centro ao administrador #3. Proposta #1 criada e exibida; após aprovação informada, saiu da fila e nova simulação ficou sem sugestões. A confirmação com a própria conta setorial permanece pendente do titular. Não há comprovação de todos os perfis e fluxos em produção.
+
+Correção da duplicidade publicada até `6517ea6`, com 17 testes Java / compilação aprovados e 18 testes Node locais aprovados. Falha de comunicação no cadastro da loja e retorno ao login durante carregamento do Render foram relatados; os fluxos funcionaram depois, mas a causa dessas falhas não foi estabelecida. Trânsito em tempo real, GPS/rotas, CRUD completo de lojas/setores e auditoria continuam limites explícitos.
+
+Esta atualização altera somente documentação e não executa SQL nem altera usuários, atribuições ou veículos.
