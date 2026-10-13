@@ -123,8 +123,9 @@ public class AdminApiController {
     }
 
     @PutMapping("/vehicles/{id}")
+    @org.springframework.transaction.annotation.Transactional
     public AdminVehicleView updateVehicle(@PathVariable Long id, @RequestBody VehiclePayload body) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Veículo não encontrado."));
+        Vehicle vehicle = vehicleRepository.lockById(id).orElseThrow(() -> new IllegalArgumentException("Veículo não encontrado."));
         vehicleRepository.findByCodeIgnoreCase(body.code() == null ? "" : body.code().trim())
                 .filter(existing -> !existing.getId().equals(id))
                 .ifPresent(existing -> { throw new IllegalArgumentException("Código de veículo já cadastrado."); });

@@ -9,11 +9,11 @@
     if (!response.ok) throw new Error(`Operação recusada (${response.status}). Confira permissões, capacidade, estado do veículo e dados informados.`);
     const text = await response.text(); return text ? JSON.parse(text) : null;
   }
-  const run = async action => { try { await action(); $('message').textContent = 'Operação concluída.'; } catch (error) { $('message').textContent = error.message; } };
+  const run = async (action, showSuccess=true) => { try { await action(); if(showSuccess) $('message').textContent = 'Operação concluída.'; } catch (error) { $('message').textContent = error.message; } };
   const button = (label, action) => { const b = el('button', label); b.type = 'button'; b.onclick = () => run(async () => { b.disabled=true; try { await action(); } finally { b.disabled=false; } }); return b; };
   function cell(row, node) { const td=el('td'); td.append(typeof node === 'string' ? document.createTextNode(node) : node); row.append(td); }
   async function loadFleet() {
-    [stores] = await Promise.all([api('/api/admin/operations/stores')]);
+    stores = await api('/api/admin/operations/stores');
     const fleet = await api('/api/admin/operations/vehicles');
     $('stores').replaceChildren(); $('vehicles').replaceChildren();
     for (const s of stores) {
@@ -29,7 +29,7 @@
       for(const s of stores.filter(s=>s.active&&!s.blocked&&(s.occupancy<s.capacity||s.id===v.storeId))) target.append(option(s.id,`${s.name} (${s.occupancy}/${s.capacity})`)); cell(row,target);
       const actions=el('div'); const transfer=button('Transferir',async()=>{if(!target.value) throw new Error('Selecione uma loja de destino.');await api(`/api/admin/operations/vehicles/${v.id}/move`,{storeId:Number(target.value)});await loadFleet();}); transfer.disabled=v.status==='RENTED'; const save=button('Salvar estado',async()=>{await api(`/api/admin/operations/vehicles/${v.id}/status`,{status:state.value});await loadFleet();}); save.disabled=v.status==='RENTED'; actions.append(transfer,save);cell(row,actions);$('vehicles').append(row);
     }
-    if(!stores.length) $('message').textContent='Nenhuma loja acessível. O administrador geral precisa cadastrar setores/lojas e aprovar a atribuição dos setores.';
+    $('message').textContent = stores.length ? 'Dados atualizados. As operações respeitam seus setores autorizados.' : 'Nenhuma loja acessível. O administrador geral precisa cadastrar setores/lojas e aprovar a atribuição dos setores.';
   }
   async function loadGeneral() {
     const sectors=await api('/api/admin/sectors');
@@ -51,5 +51,5 @@
       form('proposal-form','/api/admin/redistribution-proposals',['sectorId','toAdministratorId'],loadGeneral);
       $('preview').onclick=()=>run(async()=>{const preview=await api('/api/admin/sector-distribution/preview');$('suggestions').replaceChildren(el('p',preview.calculationBasis));for(const s of preview.suggestions){const row=el('p',`${s.sectorName} → administrador #${s.toAdministratorId}. ${s.reason} `);row.append(button('Criar proposta',async()=>{await api('/api/admin/redistribution-proposals',{sectorId:s.sectorId,toAdministratorId:s.toAdministratorId,reason:s.reason});await loadGeneral();}));$('suggestions').append(row);}});
     }
-  });
+  }, false);
 })();

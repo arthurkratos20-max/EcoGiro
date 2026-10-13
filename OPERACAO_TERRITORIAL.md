@@ -8,6 +8,7 @@
 - ADMIN_SETORIAL vê e opera apenas lojas ativas dos setores ativos atribuídos à sua conta. O mapa também aplica esse filtro no servidor.
 - ADMIN_GERAL e ADMIN legado mantêm acesso global à frota; somente ADMIN_GERAL cadastra território e aprova redistribuição. Não existe promoção automática de contas.
 - Transferências validam acesso na origem e destino, estado de aluguel, loja/setor ativos, bloqueio e capacidade. A loja de destino é bloqueada na transação para serializar transferências e alterações de capacidade concorrentes.
+- A edição do veículo no painel global também bloqueia a linha em transação para não sobrescrever uma transferência concorrente.
 - Transferência atualiza a loja, coordenadas e nome de localização do veículo.
 - Capacidade não pode ser reduzida abaixo da quantidade atual de veículos. Veículos alugados não podem ser alterados ou transferidos por esta operação.
 - Tela de propostas: simulação, criação manual ou a partir da sugestão, fila de pendentes, aprovação e rejeição. A aprovação continua sendo explícita e restrita ao administrador geral.
