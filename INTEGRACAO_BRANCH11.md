@@ -54,3 +54,7 @@ Captura de homologação mostrou HTTP 405 em POST /admin/login no Pages. Adicion
 ## Configuração Pages conferida — 12/10/2026, 20h01
 
 Captura confirma Production branch branch11---UI/UX-atualizados, automatic production deployments habilitado, Root directory EcoGiro Branch 11/EcoGiro-feature-Adicao-Documentos/ecogiro e output src/main/resources/static. Novo commit documental emitido após a conferência para solicitar deploy automático do HEAD que inclui a correção ca09405. Sucesso deste novo deploy e autenticação administrativa ainda devem ser confirmados.
+
+## Homologação do acesso administrativo — 12/10/2026, 21h07
+
+Após redefinição manual da senha pelo proprietário, usuário confirmou login administrativo com sucesso. Captura de https://ecogiro.pages.dev/admin.html confirma painel carregado, header administrativo e dados da API: 1 usuário, 0 solicitações pendentes, 1 assinatura e 7 veículos; solicitação previamente aprovada visível. Isso confirma envio do formulário, autenticação, sessão através do proxy e leitura do painel. Nenhuma senha ou hash incluído na documentação. Navegação ao mapa administrativo, retorno ao painel e logout ainda pendentes de confirmação.
