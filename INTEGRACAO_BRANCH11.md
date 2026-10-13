@@ -70,4 +70,10 @@ Captura do desenvolvedor confirma https://ecogiro.pages.dev/mapa-admin.html com 
 
 ## 13/10/2026 — entrega de operação territorial e validação
 
-A nova tela administrativa, vínculo veículo/loja, filtros por setor, limites e bloqueios de destinos e interface de redistribuição estão detalhados em [OPERACAO_TERRITORIAL.md](OPERACAO_TERRITORIAL.md). Essa seção atualiza as pendências anteriores: as operações indicadas agora possuem implementação, mas precisam de validação Java e deploy. Não há confirmação de trânsito em tempo real nem de logout em produção. Testes Node: 16 aprovados localmente.
+A nova tela administrativa, vínculo veículo/loja, filtros por setor, limites e bloqueios de destinos e interface de redistribuição estão detalhados em [OPERACAO_TERRITORIAL.md](OPERACAO_TERRITORIAL.md). Essa seção atualiza as pendências anteriores: as operações indicadas agora possuem implementação e validação Java aprovada, com deploy ainda a verificar. Não há confirmação de trânsito em tempo real nem de logout em produção. Testes Node: 16 aprovados localmente.
+
+### Validação concluída antes da atualização da branch de produção
+
+Em 13/10/2026, GitHub Actions executou Java 21, `test bootJar` e os testes Node com sucesso nas execuções [38329031623](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38329031623) e [38329148732](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38329148732). Foram 16 testes Java e 16 testes Node. O teste de logout no Spring confirmou invalidação da sessão e redirecionamento para novo login; isso encerra a pendência de teste automatizado, sem afirmar confirmação manual em produção. Os relatórios Java estão nos artifacts do Actions.
+
+O código foi primeiro publicado em `validacao/operacao-territorial`; só depois das validações foi preparado para a atualização de `branch11---UI/UX-atualizados`. As novas colunas são opcionais e preservam veículos existentes. A operação setorial requer lojas cadastradas, vínculo dos veículos e setores atribuídos, sem alteração automática de contas ou papéis. Trânsito em tempo real, provisionamento de conta geral, confirmação dos deploys e teste manual do site continuam explicitamente pendentes.

@@ -35,7 +35,7 @@ JPA adiciona `store_id` opcional em `TB_VEICULO`, `capacity` e `blocked` opciona
 
 - 16 testes Node passaram localmente: perfis/headers/mapas, falhas e expiração, proxy, cookie, redirecionamento, logout e nova rota protegida.
 - Testes Java adicionados para capacidade, bloqueio, alugados, origem não autorizada, atualização de localização, escopo setorial, logout/invalidação de sessão, bloqueios por papel e CSRF.
-- Execução local do Gradle bloqueada por rede; validação Java pelo Actions ainda precisa ser registrada antes de declarar a suíte aprovada.
+- Execução local do Gradle bloqueada por rede; execução com Java 21 no GitHub Actions aprovada. `test bootJar` passou, com 16 testes Java e 16 testes Node. Validação do código final: [execução 38329148732](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38329148732), commit `8e1cb57617c6abd8e094b1d47779e181383eb679`. A execução anterior também passou.
 - Testes de logout do proxy usam respostas simuladas; o teste Java verifica a sessão no Spring. Logout no site publicado ainda requer confirmação em produção.
 - Bloqueio manual não é trânsito real. Integração com trânsito, tempo de viagem, rotas e otimização por distância/carga necessita fornecedor e dados externos.
 - Simulação de setores ainda usa quantidade de setores, não quantidade de lojas/veículos, distância ou tráfego.
