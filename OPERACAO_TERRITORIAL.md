@@ -25,7 +25,7 @@
 5. O administrador geral ou legado transfere os veículos sem loja para as lojas cadastradas. Somente então esses veículos ficam visíveis ao administrador setorial responsável.
 6. O administrador setorial opera a frota entre suas próprias lojas. Um usuário comum não acessa essa tela ou suas APIs.
 
-Nenhuma senha, papel de usuário ou atribuição foi alterado diretamente no Neon. A conta ADMIN legado não ganha poderes de ADMIN_GERAL. O provisionamento do primeiro ADMIN_GERAL exige a gestão autorizada das contas no ambiente de produção.
+O código não altera senhas, papéis ou atribuições automaticamente. O primeiro ADMIN_GERAL foi provisionado manualmente pelo responsável no Neon, conforme registro de produção abaixo. Outras contas ADMIN legado não recebem essa promoção automaticamente.
 
 ## Alterações no banco
 
@@ -54,3 +54,5 @@ As capturas enviadas confirmaram deploy bem-sucedido de `93e497c` no Render e no
 O log de 01:09:31 UTC confirmou duplicidade de `DF-CENTRO` em `uk_setor_codigo`, SQLSTATE 23505. O setor já existia. A correção retorna HTTP 409 com mensagem de código duplicado para setores e lojas, sem mostrar SQL ou detalhes internos. A tela exibe a mensagem com texto seguro, impede reenvio simultâneo dos formulários e distingue cadastro salvo de falha na atualização da tela. Teste de integração reproduz o cadastro repetido.
 
 Cadastro de loja, transferência, capacidade/bloqueio e aprovação com um administrador setorial ainda precisam de teste manual em produção. A captura da tela geral demonstra novo login, mas não confirma tentativa de reutilizar a sessão encerrada.
+
+Validação da correção: 17 testes Java e compilação `test bootJar` aprovados no [Actions 38331010701](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38331010701); 18 testes Node aprovados localmente, incluindo os dois novos testes de formulário. O código foi validado antes da atualização da branch de deploy.
