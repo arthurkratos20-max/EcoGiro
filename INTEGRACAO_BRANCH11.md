@@ -62,3 +62,7 @@ Após redefinição manual da senha pelo proprietário, usuário confirmou login
 ## Ajuste de URLs sem extensão — 12/10/2026, 21h13
 
 Captura mostrou 404 do Spring Boot em GET /login. O proxy passa a servir GET /login pelos assets Pages, preservando POST /login no backend. URLs administrativas e de usuário sem .html são normalizadas para páginas protegidas no Spring Boot, evitando que a canonicalização estática do Pages contorne a sessão. GET /admin/login redireciona ao formulário administrativo. Homologação de mapa e logout permanece pendente; a captura sozinha não determina se houve expiração/reinício da sessão.
+
+## Mapa administrativo homologado — 12/10/2026, 21h17
+
+Captura do desenvolvedor confirma https://ecogiro.pages.dev/mapa-admin.html com header Administração / Mapa / Site / Sair, mapa renderizado e 7 veículos exibidos. O problema original de troca do header administrativo pelo de usuário está corrigido no fluxo observado. Retorno ao painel e logout ainda precisam de confirmação; filtros e perfis setoriais não foram homologados nesta captura.
