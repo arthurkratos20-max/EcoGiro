@@ -46,3 +46,11 @@ JPA adiciona `store_id` opcional em `TB_VEICULO`, `capacity` e `blocked` opciona
 ## Deploy
 
 Publicar a mesma branch 11 no Render e Cloudflare. A página nova vem do backend para exigir sessão; assets continuam no Pages. O Neon não possui branch de código da aplicação. Revalidar login, Operação territorial, mapa por perfil e logout após os dois deploys.
+
+## Verificação em produção e correções — 12/10/2026 (Brasília)
+
+As capturas enviadas confirmaram deploy bem-sucedido de `93e497c` no Render e no Cloudflare Pages de produção. A tela de operação carregou os veículos do Neon. A restrição antiga `tb_usuario_role_check` rejeitou ADMIN_GERAL com SQLSTATE 23514: `ddl-auto=update` não atualizou essa regra antiga. A migração manual [20261013_admin_roles.sql](docs/migrations/20261013_admin_roles.sql) permite os quatro papéis válidos mantendo o CHECK. Não concede privilégios automaticamente. O usuário executou a migração e alterou somente sua própria conta para ADMIN_GERAL; a tela de cadastro geral passou a aparecer após novo login.
+
+O log de 01:09:31 UTC confirmou duplicidade de `DF-CENTRO` em `uk_setor_codigo`, SQLSTATE 23505. O setor já existia. A correção retorna HTTP 409 com mensagem de código duplicado para setores e lojas, sem mostrar SQL ou detalhes internos. A tela exibe a mensagem com texto seguro, impede reenvio simultâneo dos formulários e distingue cadastro salvo de falha na atualização da tela. Teste de integração reproduz o cadastro repetido.
+
+Cadastro de loja, transferência, capacidade/bloqueio e aprovação com um administrador setorial ainda precisam de teste manual em produção. A captura da tela geral demonstra novo login, mas não confirma tentativa de reutilizar a sessão encerrada.

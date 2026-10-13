@@ -41,4 +41,21 @@ class SessionSecurityTest {
         mvc.perform(post("/api/admin/operations/sectors").with(user("fixture").roles("ADMIN_GERAL"))
             .contentType("application/json").content("{\"code\":\"X\",\"name\":\"Centro\"}")).andExpect(status().isForbidden());
     }
+    @Autowired com.example.ecogiro.repository.AppUserRepository users;
+    @Test @org.springframework.transaction.annotation.Transactional
+    void setorDuplicadoRetornaConflitoComMensagemClara() throws Exception {
+        var actor=new com.example.ecogiro.model.AppUser();
+        actor.setFullName("Administrador de teste"); actor.setCpf("98765432101");actor.setAge(25);
+        actor.setEmail("duplicate@ecogiro.test");actor.setPassword("fixture");actor.setRole(com.example.ecogiro.model.Role.ADMIN_GERAL);
+        users.saveAndFlush(actor);
+        String body="{\"code\":\"TEST-DUPLICATE\",\"name\":\"Setor de teste\"}";
+        mvc.perform(post("/api/admin/operations/sectors").with(user(actor.getEmail()).roles("ADMIN_GERAL"))
+            .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf().asHeader())
+            .contentType("application/json").content(body)).andExpect(status().isOk());
+        mvc.perform(post("/api/admin/operations/sectors").with(user(actor.getEmail()).roles("ADMIN_GERAL"))
+            .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf().asHeader())
+            .contentType("application/json").content(body)).andExpect(status().isConflict())
+            .andExpect(jsonPath("$.error").value("Já existe um setor com esse código. Selecione o setor existente ou use outro código."));
+    }
+
 }

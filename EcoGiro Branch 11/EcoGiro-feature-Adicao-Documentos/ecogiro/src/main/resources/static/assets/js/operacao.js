@@ -6,7 +6,13 @@
   const option = (value, text) => { const node = el('option', text); node.value = value; return node; };
   async function api(path, body) {
     const response = await fetch(path, { credentials: 'same-origin', redirect: 'error', headers: body === undefined ? {} : {'Content-Type':'application/json', [token.headerName]:token.token}, ...(body === undefined ? {} : {method:'POST',body:JSON.stringify(body)}) });
-    if (!response.ok) throw new Error(`Operação recusada (${response.status}). Confira permissões, capacidade, estado do veículo e dados informados.`);
+    if (!response.ok) {
+      let detail; try { detail = await response.json(); } catch { /* A resposta pode não ser JSON. */ }
+      const message = typeof detail?.error === 'string' ? detail.error : null;
+      throw new Error(message || (response.status >= 500
+        ? 'Falha no servidor. O cadastro pode ter sido salvo; atualize a página antes de tentar novamente.'
+        : `Operação recusada (${response.status}). Confira permissões, capacidade, estado do veículo e dados informados.`));
+    }
     const text = await response.text(); return text ? JSON.parse(text) : null;
   }
   const run = async (action, showSuccess=true) => { try { await action(); if(showSuccess) $('message').textContent = 'Operação concluída.'; } catch (error) { $('message').textContent = error.message; } };
@@ -38,7 +44,21 @@
     for(const p of pending) {const row=el('p',`#${p.id}: ${p.sectorName} → administrador #${p.toAdministratorId}. ${p.reason} `);for(const action of ['approve','reject']) row.append(button(action==='approve'?'Aprovar':'Rejeitar',async()=>{await api(`/api/admin/redistribution-proposals/${p.id}/${action}`,{});await loadGeneral();}));$('pending').append(row);}
     if(!pending.length) $('pending').append(el('p','Nenhuma proposta pendente.'));
   }
-  const form = (id,path,numbers,refresh) => { $(id).onsubmit=event=>{event.preventDefault();run(async()=>{const data=Object.fromEntries(new FormData(event.target));for(const key of numbers)data[key]=Number(data[key]);await api(path,data);event.target.reset();await refresh();});}; };
+  const form = (id,path,numbers,refresh) => {
+    let submitting=false;
+    $(id).onsubmit=event=>{
+      event.preventDefault(); if(submitting) return;
+      const target=event.target, submit=target.querySelector('button');
+      submitting=true; submit.disabled=true;
+      run(async()=>{
+        try {
+          const data=Object.fromEntries(new FormData(target));for(const key of numbers)data[key]=Number(data[key]);
+          await api(path,data); target.reset();
+          try { await refresh(); } catch { throw new Error('Cadastro salvo, mas a atualização da tela falhou. Recarregue a página; não envie novamente.'); }
+        } finally { submitting=false;submit.disabled=false; }
+      });
+    };
+  };
   run(async()=>{
     role=(await api('/api/session/profile')).role;
     if(!['ADMIN','ADMIN_GERAL','ADMIN_SETORIAL'].includes(role)) {location.replace('/login.html');return;}
