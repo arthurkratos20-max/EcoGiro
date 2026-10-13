@@ -58,3 +58,7 @@ Captura confirma Production branch branch11---UI/UX-atualizados, automatic produ
 ## Homologação do acesso administrativo — 12/10/2026, 21h07
 
 Após redefinição manual da senha pelo proprietário, usuário confirmou login administrativo com sucesso. Captura de https://ecogiro.pages.dev/admin.html confirma painel carregado, header administrativo e dados da API: 1 usuário, 0 solicitações pendentes, 1 assinatura e 7 veículos; solicitação previamente aprovada visível. Isso confirma envio do formulário, autenticação, sessão através do proxy e leitura do painel. Nenhuma senha ou hash incluído na documentação. Navegação ao mapa administrativo, retorno ao painel e logout ainda pendentes de confirmação.
+
+## Ajuste de URLs sem extensão — 12/10/2026, 21h13
+
+Captura mostrou 404 do Spring Boot em GET /login. O proxy passa a servir GET /login pelos assets Pages, preservando POST /login no backend. URLs administrativas e de usuário sem .html são normalizadas para páginas protegidas no Spring Boot, evitando que a canonicalização estática do Pages contorne a sessão. GET /admin/login redireciona ao formulário administrativo. Homologação de mapa e logout permanece pendente; a captura sozinha não determina se houve expiração/reinício da sessão.
