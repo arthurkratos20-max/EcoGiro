@@ -38,8 +38,10 @@ JPA adiciona protocol (opcional para compatibilidade), índice único e veiculo_
 
 ## Verificação
 
-Resultados de CI serão registrados após execução. Testes locais Node: 26 aprovados, incluindo 1024 combinações do recomendador. Testes Java novos cobrem matriz completa de categorias/tipos, plano inativo, indisponibilidade, seleção ausente, incompatibilidade na criação/aprovação, decisão repetida e persistência/imutabilidade de protocolo. Não foram usadas credenciais nem banco de produção nos testes.
+Validação final aprovada no [GitHub Actions 38736787265](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38736787265), commit b77f91cbd336299c94be9cb6c36469e0092a0705: 26 testes Java, 29 testes Node e compilação `test bootJar`. A execução anterior [38736404996](https://github.com/arthurkratos20-max/EcoGiro/actions/runs/38736404996) também passou. A suíte Node cobre as 1024 combinações do recomendador e a seleção obrigatória de veículo na interface. Testes Java novos cobrem matriz completa de categorias/tipos, plano inativo, indisponibilidade, seleção ausente, incompatibilidade na criação/aprovação, decisão repetida e persistência/imutabilidade de protocolo. Não foram usadas credenciais nem banco de produção nos testes.
 
 ## Pendências preservadas
 
 A homologação do administrador setorial pelo titular ainda depende da confirmação da equipe. Congestionamento real/roteamento, auditoria de transferências e CRUD completo de lojas/setores continuam fora desta auditoria, pois não constam como entrega nas tarefas da imagem. O recomendador mantém os limites descritos em REGRAS_RECOMENDACAO.md. Não há garantia de todo o projeto concluído apenas por estas tarefas terem sido revisadas.
+
+O README foi atualizado para refletir Java 21/Gradle, Render, contratos atuais, localização do aplicativo e links de documentação; instruções antigas de Maven e endpoint /recomendacao não correspondiam a esta branch. O teste de persistência também verifica que o banco rejeita um protocolo duplicado. Publicação de código não equivale a confirmação de deploy ou homologação manual do novo fluxo em produção.
