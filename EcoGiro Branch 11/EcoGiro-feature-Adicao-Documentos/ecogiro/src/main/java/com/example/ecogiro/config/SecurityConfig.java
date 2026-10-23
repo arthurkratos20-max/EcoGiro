@@ -81,7 +81,7 @@ public class SecurityConfig {
                 .hasAuthority("ROLE_ADMIN_GERAL")
 
                 // Mapa administrativo dedicado, inclusive para contas legadas.
-                .requestMatchers("/mapa-admin.html")
+                .requestMatchers("/mapa-admin.html", "/estoque.html")
                 .hasAnyAuthority("ROLE_ADMIN_GERAL", "ROLE_ADMIN_SETORIAL", "ROLE_ADMIN_LEGACY")
 
                 // Painel setorial dedicado: nao oferece operacoes globais.
