@@ -34,7 +34,8 @@ Integração seletiva do ZIP EcoGiro-branch11-UI-UX-atualizados.zip e do relató
 
 - Testes Node executam o script da tela com DOM, API e Leaflet simulados: agrupamento/coordenadas, clique e filtros, escape HTML e destinos, escrita com CSRF e proxy de estoque.
 - Testes Java verificam a filtragem do inventário (incluindo inativos e exclusão de outros setores) e a proteção HTTP da página e APIs.
-- Resultado completo do CI será registrado após a execução na branch de validação.
+- CI completo aprovado antes de atualizar a branch de trabalho: execução 39883424296, commit 381cdf9f8a1c62ca0d898c36b4e5dbb5ffe81bea, branch validacao/estoque-20261022. Testes Node e Java e compilação test bootJar concluídos com sucesso. Link: https://github.com/arthurkratos20-max/EcoGiro/actions/runs/39883424296 .
+- Cinco testes novos de JavaScript aprovados também localmente. Quatro testes Java novos aprovados no CI, preservando a suíte anterior. O commit final acrescenta somente este registro de validação.
 
 ## Roteiro manual após deploy
 
