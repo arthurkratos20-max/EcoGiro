@@ -54,7 +54,10 @@ public class AuthController {
                               @RequestParam String email,
                               @RequestParam String password,
                               HttpServletResponse response) throws IOException {
-        if (!adminRegistrationCode.equals(adminId)) {
+        // Falha fechada: cadastro administrativo fica desabilitado se o segredo
+        // não estiver configurado no ambiente ou não corresponder ao informado.
+        if (adminRegistrationCode == null || adminRegistrationCode.isBlank()
+                || adminId == null || !adminRegistrationCode.equals(adminId)) {
             response.sendRedirect("/admin-cadastro.html?error=" + urlCode("ID administrativo não autorizado."));
             return;
         }
