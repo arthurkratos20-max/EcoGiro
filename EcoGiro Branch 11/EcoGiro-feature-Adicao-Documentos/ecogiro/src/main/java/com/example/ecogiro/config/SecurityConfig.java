@@ -67,6 +67,8 @@ public class SecurityConfig {
                     "/admin/register",
                     "/admin/login",
                     "/api/recommendations",
+                    "/api/requests/lookup",
+                    "/consulta-solicitacao.html",
                     "/error",
                     "/favicon.ico"
                 ).permitAll()
