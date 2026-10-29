@@ -38,6 +38,10 @@
 | [Operação territorial](OPERACAO_TERRITORIAL.md) | Perfis, lojas, frota, propostas e homologação |
 | [Integração da branch 11](INTEGRACAO_BRANCH11.md) | Histórico de integração e deploy |
 | [Histórico da branch 10](HISTORICO_BACKEND_BRANCH10.md) | Entregas anteriores |
+| [Histórico de implementação da Branch 12](HISTORICO_IMPLEMENTACOES_BRANCH12.md) | Consulta pública por protocolo + CPF, segurança de configuração, deploy e validação de produção |
+| [Publicação da Branch 12](DEPLOY_BRANCH12.md) | Configuração Render, Neon e Cloudflare Pages |
+| [Revisão preventiva de segurança](SEGURANCA_REVISAO_2026-10-29.md) | Ajustes de segurança e verificações pendentes |
+
 
 ## Funcionalidades implementadas
 
@@ -66,7 +70,7 @@ node --test tests/*.test.cjs
 
 Consulte `src/main/resources/application.properties`. Produção utiliza SPRING_DATASOURCE_URL (JDBC), SPRING_DATASOURCE_USERNAME e SPRING_DATASOURCE_PASSWORD. ADMIN_REGISTRATION_CODE é configurado no ambiente do servidor. Não publique senhas, tokens ou URLs com credenciais.
 
-O Dockerfile utiliza Java 21. O Render hospeda o Spring Boot e seus arquivos estáticos no mesmo domínio. A configuração externa do Cloudflare Pages não é alterada nesta entrega; integrações Git existentes podem executar deploy automático.
+O Dockerfile utiliza Java 21. O Render hospeda o Spring Boot e seus arquivos estáticos no mesmo domínio. A configuração do Cloudflare Pages e o encaminhamento de chamadas `/api/*` estão documentados em `wrangler.toml` e `DEPLOY_BRANCH12.md`. O estado do deploy e as validações reportadas da Branch 12 estão em `HISTORICO_IMPLEMENTACOES_BRANCH12.md`.
 
 ## API de contratação
 
