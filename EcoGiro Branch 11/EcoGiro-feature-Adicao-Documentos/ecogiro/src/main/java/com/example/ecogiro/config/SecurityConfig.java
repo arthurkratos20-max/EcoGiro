@@ -38,7 +38,8 @@ public class SecurityConfig {
                     "POST".equalsIgnoreCase(request.getMethod())
                     && (request.getRequestURI().equals("/api/admin/redistribution-proposals")
                         || request.getRequestURI().startsWith("/api/admin/redistribution-proposals/")
-                        || request.getRequestURI().startsWith("/api/admin/operations/")))
+                        || request.getRequestURI().startsWith("/api/admin/operations/"))
+                )
             )
 
             .headers(headers ->
@@ -46,6 +47,10 @@ public class SecurityConfig {
             )
 
             .authorizeHttpRequests(auth -> auth
+
+                // O console H2 nunca deve ficar público, mesmo se alguém habilitar
+                // acidentalmente SPRING_H2_CONSOLE_ENABLED no ambiente.
+                .requestMatchers("/h2-console/**").denyAll()
 
                 // Rotas públicas
                 .requestMatchers(
@@ -62,7 +67,6 @@ public class SecurityConfig {
                     "/admin/register",
                     "/admin/login",
                     "/api/recommendations",
-                    "/h2-console/**",
                     "/error",
                     "/favicon.ico"
                 ).permitAll()
