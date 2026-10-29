@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: ecogiro-api
+    runtime: docker
+    rootDir: EcoGiro Branch 11/EcoGiro-feature-Adicao-Documentos/ecogiro
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: ADMIN_REGISTRATION_CODE
+        sync: false
+      - key: SPRING_H2_CONSOLE_ENABLED
+        value: "false"
