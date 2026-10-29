@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Consultar solicitação | EcoGiro</title>
+<style>
+:root{color-scheme:light;--green:#16734b;--ink:#18332a;--muted:#61756b;--line:#dce8e0;--bg:#f3f8f4}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);min-height:100vh;display:grid;place-items:center;padding:24px}
+main{width:min(100%,560px);background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(22px,5vw,38px);box-shadow:0 14px 40px #18332a12}
+a{color:var(--green)}h1{margin:.2rem 0 .5rem;font-size:clamp(1.6rem,4vw,2.1rem)}p{color:var(--muted)}
+label{display:block;font-weight:650;margin:18px 0 7px}input{width:100%;padding:13px 14px;border:1px solid #bdcec2;border-radius:10px;font:inherit}
+input:focus{outline:3px solid #16734b2b;border-color:var(--green)}button{margin-top:20px;width:100%;border:0;border-radius:10px;background:var(--green);color:white;font:inherit;font-weight:700;padding:14px;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}#result{margin-top:20px;padding:16px;border-radius:12px;background:#f4f8f5}#result[hidden]{display:none}.error{color:#9c2525}
+.row{margin:9px 0}.row strong{display:block}.status{display:inline-block;padding:4px 10px;border-radius:99px;background:#e2f3e8;color:#155d3b;font-weight:700}
+small{display:block;color:var(--muted);margin-top:12px}
+</style></head>
+<body><main>
+<a href="/index.html">← Voltar ao EcoGiro</a>
+<h1>Consultar solicitação</h1>
+<p>Informe o protocolo recebido ao registrar a solicitação e o CPF usado no cadastro.</p>
+<form id="lookup-form">
+<label for="protocol">Protocolo</label><input id="protocol" name="protocol" required maxlength="64" autocomplete="off" placeholder="Cole seu protocolo">
+<label for="cpf">CPF do titular</label><input id="cpf" name="cpf" required inputmode="numeric" maxlength="14" autocomplete="off" placeholder="000.000.000-00">
+<button id="submit" type="submit">Consultar andamento</button>
+</form>
+<section id="result" hidden aria-live="polite"></section>
+<small>Por segurança, os dados só aparecem quando protocolo e CPF correspondem.</small>
+</main>
+<script>
+const form=document.querySelector('#lookup-form'),result=document.querySelector('#result'),button=document.querySelector('#submit');
+function esc(v){return String(v??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+form.addEventListener('submit',async e=>{
+ e.preventDefault();button.disabled=true;button.textContent='Consultando…';result.hidden=false;result.className='';result.textContent='Buscando solicitação…';
+ try{
+  const response=await fetch('/api/requests/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({protocol:form.protocol.value.trim(),cpf:form.cpf.value})});
+  const data=await response.json();if(!response.ok)throw new Error(data.error||'Não foi possível consultar.');
+  const date=v=>v?new Date(v).toLocaleString('pt-BR'):'Ainda não respondida';
+  const statuses={PENDING:'Pendente',APPROVED:'Aprovada',REJECTED:'Recusada',CANCELLED:'Cancelada'};
+  result.innerHTML='<h2>Solicitação encontrada</h2><div class="row"><strong>Protocolo</strong>'+esc(data.protocol)+'</div><div class="row"><strong>Plano</strong>'+esc(data.planName)+'</div><div class="row"><strong>Veículo</strong>'+esc(data.vehicleModel)+'</div><div class="row"><strong>Status</strong><span class="status">'+esc(statuses[data.status]||data.status)+'</span></div><div class="row"><strong>Solicitada em</strong>'+esc(date(data.requestedAt))+'</div><div class="row"><strong>Respondida em</strong>'+esc(date(data.respondedAt))+'</div>'+(data.response?'<div class="row"><strong>Resposta da equipe</strong>'+esc(data.response)+'</div>':'');
+ }catch(err){result.className='error';result.textContent=err.message||'Erro ao consultar. Tente novamente.'}
+ finally{button.disabled=false;button.textContent='Consultar andamento'}
+});
+</script></body></html>

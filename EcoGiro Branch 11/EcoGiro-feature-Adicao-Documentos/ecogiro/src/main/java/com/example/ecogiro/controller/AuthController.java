@@ -23,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
 
-    @Value("${app.admin.registration-code}")
+    @Value("${app.admin.registration-code:}")
     private String adminRegistrationCode;
 
     public AuthController(AuthService authService, AuthenticationManager authenticationManager) {
@@ -54,7 +54,11 @@ public class AuthController {
                               @RequestParam String email,
                               @RequestParam String password,
                               HttpServletResponse response) throws IOException {
-        if (!adminRegistrationCode.equals(adminId)) {
+        // Falha fechada: cadastro administrativo desabilitado quando o segredo
+        // não existe, está vazio ou não corresponde exatamente ao informado.
+        if (adminRegistrationCode == null || adminRegistrationCode.isBlank()
+                || adminId == null || adminId.isBlank()
+                || !adminRegistrationCode.equals(adminId)) {
             response.sendRedirect("/admin-cadastro.html?error=" + urlCode("ID administrativo não autorizado."));
             return;
         }

@@ -16,4 +16,5 @@ public interface PlanRequestRepository extends JpaRepository<PlanRequest, Long> 
     @org.springframework.data.jpa.repository.Query("select r from PlanRequest r where r.id = :id")
     java.util.Optional<PlanRequest> lockById(@org.springframework.data.repository.query.Param("id") Long id);
     long countByStatus(PlanRequestStatus status);
+    java.util.Optional<PlanRequest> findByProtocolIgnoreCase(String protocol);
 }
