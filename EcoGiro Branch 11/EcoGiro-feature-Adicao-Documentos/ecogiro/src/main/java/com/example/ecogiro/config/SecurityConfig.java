@@ -1,6 +1,11 @@
 package com.example.ecogiro.config;
 
 import com.example.ecogiro.model.Role;
+import com.example.ecogiro.dto.ApiErrorResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +33,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, ObjectMapper objectMapper) throws Exception {
 
         http
             .csrf(csrf -> csrf
@@ -158,8 +163,25 @@ public class SecurityConfig {
             )
 
             // Página personalizada para acesso sem permissão
-            .exceptionHandling(exception ->
-                exception.accessDeniedPage("/403.html")
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    if (request.getRequestURI().startsWith("/api/")) {
+                        writeSecurityError(response, objectMapper, HttpStatus.UNAUTHORIZED,
+                                "UNAUTHORIZED", "É necessário autenticar-se para acessar este recurso.",
+                                request.getRequestURI());
+                    } else {
+                        response.sendRedirect("/login.html");
+                    }
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    if (request.getRequestURI().startsWith("/api/")) {
+                        writeSecurityError(response, objectMapper, HttpStatus.FORBIDDEN,
+                                "FORBIDDEN", "Você não possui permissão para acessar este recurso.",
+                                request.getRequestURI());
+                    } else {
+                        response.sendRedirect("/403.html");
+                    }
+                })
             )
 
             // Logout
@@ -172,5 +194,15 @@ public class SecurityConfig {
             );
 
         return http.build();
+    }
+
+    private void writeSecurityError(HttpServletResponse response, ObjectMapper objectMapper,
+                                    HttpStatus status, String error, String message, String path)
+            throws java.io.IOException {
+        response.setStatus(status.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(
+                ApiErrorResponse.of(status.value(), error, message, path)));
     }
 }
