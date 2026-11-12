@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#16863d">
+    <title>Nova senha | EcoGiro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/login.css">
+    <script src="assets/js/password-reset.js" defer></script>
+</head>
+<body data-area="usuario">
+<main class="login-page">
+    <a class="brand" href="index.html"><img src="assets/img/icone.svg" alt=""><span>Eco<span class="brand-accent">Giro</span></span></a>
+    <section class="login-card" aria-labelledby="reset-title">
+        <div class="login-heading">
+            <span class="eyebrow">NOVA SENHA</span>
+            <h1 id="reset-title">Crie uma nova senha</h1>
+            <p>Escolha uma senha com pelo menos 8 caracteres.</p>
+        </div>
+        <div id="feedback" class="auth-feedback" role="alert" aria-live="polite" hidden></div>
+        <form action="/reset-password" method="post" id="reset-form">
+            <input type="hidden" name="token" id="token">
+            <div class="input-group">
+                <label for="password">Nova senha</label>
+                <input type="password" id="password" name="password" autocomplete="new-password" minlength="8" required>
+            </div>
+            <div class="input-group">
+                <label for="confirmPassword">Confirme a nova senha</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" minlength="8" required>
+            </div>
+            <button class="submit-button" type="submit">Salvar nova senha</button>
+        </form>
+        <a class="back-home" href="login.html">← Voltar para o login</a>
+    </section>
+    <p class="page-footer">© 2026 EcoGiro. Mobilidade mais leve para a cidade.</p>
+</main>
+</body>
+</html>
