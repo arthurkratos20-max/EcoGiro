@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalApiExceptionHandler {
@@ -35,18 +36,18 @@ public class GlobalApiExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, safeMessage(ex, "Os dados enviados são inválidos."), request);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler({ResourceNotFoundException.class, NoSuchElementException.class})
     public ResponseEntity<ApiErrorResponse> handleNotFound(
-            ResourceNotFoundException ex, HttpServletRequest request) {
+            RuntimeException ex, HttpServletRequest request) {
         return error(HttpStatus.NOT_FOUND, safeMessage(ex, "Recurso não encontrado."), request);
     }
 
-    @ExceptionHandler({ConflictException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler({ConflictException.class, DataIntegrityViolationException.class, IllegalStateException.class})
     public ResponseEntity<ApiErrorResponse> handleConflict(
             Exception ex, HttpServletRequest request) {
-        String message = ex instanceof ConflictException
-                ? safeMessage(ex, "A operação conflita com os dados existentes.")
-                : "A operação conflita com um registro existente.";
+        String message = ex instanceof DataIntegrityViolationException
+                ? "A operação conflita com um registro existente."
+                : safeMessage(ex, "A operação conflita com o estado atual do recurso.");
         return error(HttpStatus.CONFLICT, message, request);
     }
 
