@@ -21,6 +21,7 @@
     let message = '';
     let type = 'success';
     if (params.get('registered') === '1') message = 'Cadastro realizado com sucesso. Agora você já pode entrar.';
+    else if (params.get('reset') === '1') message = 'Senha alterada com sucesso. Entre com sua nova senha.';
     else if (params.get('logout') === '1') message = 'Sessão encerrada com segurança.';
     else if (params.has('error')) {
         type = 'error';
