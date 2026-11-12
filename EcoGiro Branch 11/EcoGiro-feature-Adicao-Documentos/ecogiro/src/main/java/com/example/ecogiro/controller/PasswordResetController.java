@@ -1,6 +1,7 @@
 package com.example.ecogiro.controller;
 
 import com.example.ecogiro.service.PasswordResetService;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +24,7 @@ public class PasswordResetController {
         try {
             passwordResetService.requestReset(email);
             response.sendRedirect("/esqueci-senha.html?sent=1");
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | MailException ex) {
             response.sendRedirect("/esqueci-senha.html?error=mail");
         }
     }
