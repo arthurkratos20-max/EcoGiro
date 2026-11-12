@@ -1,212 +1,210 @@
-# EcoGiro - Mobilidade Sustentável Urbana
+# EcoGiro — Mobilidade Sustentável Urbana
 
-## Identificação Acadêmica
+> **Nota sobre a branch principal:** este README está na branch padrão `Main`, que ainda conserva uma versão anterior do código. A documentação técnica abaixo descreve a implementação mais recente registrada na branch [feature/branch12-rf04-rf05-rf08-rf09](https://github.com/arthurkratos20-max/EcoGiro/tree/feature/branch12-rf04-rf05-rf08-rf09). Esta atualização altera somente a documentação da branch `Main`: não mescla branches, não modifica o código-fonte nem altera as configurações de publicação. A branch de produção do frontend permanece separada.
 
-* **Instituição de Ensino:** Centro Universitário do Planalto Central Apparecido dos Santos
-* **Curso:** Análise e Desenvolvimento de Sistemas
-* **Disciplina:** Projeto Integrado WEB
-* **Orientador:** Profº Hudson Neves
-* ## Equipe do Projeto
+Plataforma web acadêmica para apoiar a mobilidade urbana sustentável, reunindo recomendações de meios de transporte, consulta de planos, solicitações de contratação e ferramentas administrativas para gestão de usuários, veículos e unidades.
 
-* **Integrantes:**
-* - Alessandro Falcão Zovico
-* - Arthur Cauã Machado De Souza
-* - Cauã Alves Fernandes
-* - Edna Júlia Menezes Marques
-* - Lucas Ibiapina De Morais
-* - Pedro Henrique Ferreira Gomes
-* - Sophia Fonseca Mandovano Moreira de Azevedo
-* - Yudi Fidelis De Morais
+## Identificação acadêmica
 
----
+- **Instituição:** Centro Universitário do Planalto Central Apparecido dos Santos (UniCEPLAC)
+- **Curso:** Análise e Desenvolvimento de Sistemas
+- **Disciplina:** Projeto Integrado WEB
+- **Orientador:** Prof. Hudson Neves
 
-## Descrição
+### Equipe
 
-O **EcoGiro** é uma plataforma digital de mobilidade sustentável que conecta usuários a opções flexíveis de transporte alternativo urbano, como bicicletas convencionais, bicicletas elétricas (e-bikes), patinetes elétricos e motocicletas. O sistema conta com um motor de recomendação inteligente que auxilia o usuário a escolher o veículo ideal com base em seu perfil de deslocamento e restrições operacionais.
+- Alessandro Falcão Zovico
+- Arthur Cauã Machado De Souza
+- Cauã Alves Fernandes
+- Edna Júlia Menezes Marques
+- Lucas Ibiapina De Morais
+- Pedro Henrique Ferreira Gomes
+- Sophia Fonseca Mandovano Moreira de Azevedo
+- Yudi Fidelis De Morais
 
 ---
 
-## Objetivos
+## Aplicação e repositório
 
-### Objetivo Geral
-Desenvolver uma solução full stack para recomendar e facilitar o acesso a modalidades de transporte sustentável, promovendo escolhas mais conscientes e eficientes para o deslocamento urbano.
+- **Aplicação publicada:** [https://ecogiro.pages.dev/](https://ecogiro.pages.dev/)
+- **Backend / serviço Render:** [https://ecogiro.onrender.com/](https://ecogiro.onrender.com/)
+- **Login administrativo:** [https://ecogiro.onrender.com/admin-login.html](https://ecogiro.onrender.com/admin-login.html)
+- **Repositório:** [arthurkratos20-max/EcoGiro](https://github.com/arthurkratos20-max/EcoGiro)
+- **Branch de desenvolvimento documentada:** `feature/branch12-rf04-rf05-rf08-rf09`
+- **Módulo Java:** `EcoGiro Branch 11/EcoGiro-feature-Adicao-Documentos/ecogiro`
 
-### Problemas que o sistema resolve
-* **Dificuldade na escolha do transporte ideal:** Dúvidas do usuário em relação à autonomia, necessidade de CNH, custos e esforço físico necessário para cada tipo de veículo.
-* **Barreira de entrada para uso de veículos ecológicos:** Falta de clareza sobre planos de contratação e adequação ao uso diário ou profissional.
+> A branch de desenvolvimento não deve ser confundida com a branch de produção do Pages. Alterações em branches conectadas a deploy automático podem disparar novas publicações conforme as integrações configuradas no provedor.
 
----
+## Visão geral da arquitetura
 
-## Funcionalidades
+O EcoGiro é dividido em interface web, backend e persistência de dados:
 
-* **Landing Page Institucional:** Apresentação da plataforma, catálogo de frotas, tabela de planos, benefícios e seção de dúvidas frequentes (FAQ).
-* **Motor de Recomendação (Quiz de Mobilidade):** Formulário interativo que processa dados de distância, nível de esforço desejado, finalidade de uso, posse de CNH e orçamento.
-* **Algoritmo de Recomendação no Backend:** Processamento dos dados no Java/Spring Boot para indicar o veículo principal e uma alternativa secundária.
-* **Persistência de Histórico:** Salvamento das respostas do formulário e das recomendações geradas no banco de dados.
-* **Modal de Contato/Suporte:** Interface para envio de dúvidas e mensagens de suporte.
+| Camada | Tecnologias / responsabilidade |
+| --- | --- |
+| Frontend | HTML, CSS e JavaScript; interface do usuário, formulários, painéis e integração com a API |
+| Backend | Java 21 e Spring Boot; endpoints HTTP, autenticação, autorização e regras de negócio |
+| Persistência | Spring Data JPA e Hibernate; mapeamento objeto-relacional e acesso aos dados |
+| Banco de dados | PostgreSQL, com configuração para Neon na nuvem; H2 como fallback local e para testes |
+| Build e dependências | Gradle Wrapper |
+| Hospedagem da API | Render |
+| Publicação da interface | Cloudflare Pages |
+| Mapas | Leaflet e OpenStreetMap |
+| Monitoramento | UptimeRobot para verificações periódicas de disponibilidade |
 
----
+### Organização do backend
 
-## Tecnologias Utilizadas
+O código Java segue uma separação de responsabilidades por pacotes:
 
-### Front-end
-* HTML5
-* CSS3
-* JavaScript (ES6+)
-* jQuery (v4.0.0)
-* FontAwesome (v7.3.1)
+- **`controller`:** recebe requisições HTTP, valida entradas de transporte e encaminha operações para os serviços.
+- **`service`:** concentra regras de negócio, validações e coordenação dos fluxos.
+- **`model`:** contém as entidades e enumerações que representam os dados do domínio.
+- **`repository`:** abstrai operações de persistência com Spring Data JPA.
+- **`dto`:** define objetos de transferência de dados entre a API e as demais camadas.
+- **`config`:** reúne configurações, incluindo segurança e comportamento da aplicação.
 
-### Back-end
-* Java
-* Spring Boot (Spring Web, Spring Data JPA)
+Essa divisão reduz o acoplamento entre entrada HTTP, regras de negócio e banco de dados, facilitando testes, manutenção e evolução.
 
-### Banco de Dados
-* H2 Database (Banco em memória)
+### Principais funcionalidades do backend
 
----
+- Cadastro e autenticação de usuários e administradores.
+- Validação de dados e prevenção de cadastros duplicados por CPF e e-mail.
+- Hash de senhas com BCrypt e controle de acesso com Spring Security.
+- Consulta e gerenciamento de planos de aluguel.
+- Criação, consulta, cancelamento, aprovação e rejeição de solicitações.
+- Seleção e validação, no servidor, de veículos compatíveis com o plano.
+- Geração de protocolo UUID no servidor para novas solicitações.
+- Registro de assinatura quando uma solicitação é aprovada.
+- Gerenciamento administrativo de usuários, planos e frota.
+- Operações territoriais com lojas, setores, localização e movimentação de veículos.
+- Permissões distintas para administrador geral e administrador setorial, respeitando os setores atribuídos.
 
-## Arquitetura da Solução
+### Recomendação de transporte
 
-O sistema adota uma arquitetura em camadas baseada no padrão REST/MVC:
+O questionário de recomendação utiliza uma matriz determinística de preferências no JavaScript para classificar os perfis de transporte. O backend recebe e persiste o histórico da recomendação; ele não recalcula o ranking do questionário. As regras de compatibilidade de planos e veículos são verificadas separadamente no servidor, sem confiar no resultado do quiz como autorização para contratação.
 
-1. **Camada de Apresentação (Front-end):** Interface em HTML/CSS/JS que faz requisições assíncronas (`fetch` API) enviando dados em formato JSON.
-2. **Camada de Controle (Controller):** Endpoints REST em Spring Boot (`RecomendacaoController`) que recebem as requisições HTTP e validam os DTOs.
-3. **Camada de Negócio (Service):** Regras de negócio da recomendação (`RecomendacaoService`) que calculam as escolhas de veículos.
-4. **Camada de Persistência (Repository & Entity):** Mapeamento objeto-relacional (JPA/Hibernate) para armazenamento da entidade `Recomendacao` na tabela `TB_RECOMENDACAO`.
+## Gestão do projeto — Scrum, GitHub Projects e Git
 
----
+A equipe utilizou uma abordagem ágil baseada em Scrum para organizar o desenvolvimento de forma incremental, dividir o escopo em atividades menores e acompanhar a evolução das entregas.
 
-## Modelagem do Banco de Dados
+O **GitHub Projects** foi utilizado como quadro de acompanhamento do trabalho. Ele permite organizar as atividades, visualizar o que precisa ser feito, acompanhar tarefas em andamento e identificar o que já foi concluído. O quadro funciona como apoio à priorização e à transparência do progresso entre os integrantes.
 
-### Tabela: `TB_RECOMENDACAO`
+O **GitHub** foi utilizado para hospedar o repositório e controlar a evolução do código-fonte:
 
-| Coluna | Tipo de Dado | Descrição |
-| :--- | :--- | :--- |
-| `ID` | BIGINT (PK, Auto-increment) | Identificador único do registro |
-| `DISTANCIA` | VARCHAR | Faixa de distância informada |
-| `ESFORCO` | VARCHAR | Preferência de esforço físico / ajuda elétrica |
-| `FINALIDADE` | VARCHAR | Propósito de uso do veículo |
-| `HABILITACAO` | VARCHAR | Situação do usuário em relação à CNH |
-| `ORCAMENTO` | VARCHAR | Faixa de orçamento disponível |
-| `RECOMENDACAO_PRINCIPAL` | VARCHAR | Veículo principal recomendado pelo sistema |
-| `RECOMENDACAO_ALTERNATIVA` | VARCHAR | Segunda opção de veículo recomendada |
+- **Branches:** isolam conjuntos de alterações e permitem desenvolver funcionalidades sem editar diretamente a linha principal.
+- **Commits:** registram alterações com histórico e mensagens descritivas.
+- **Pull Requests:** permitem propor, revisar e integrar alterações entre branches.
+- **Histórico do repositório:** ajuda a rastrear mudanças e identificar em qual etapa uma implementação foi introduzida.
 
----
+No backend, esse fluxo foi aplicado junto à divisão em camadas: as funcionalidades e correções eram implementadas nos componentes responsáveis, verificadas por testes e registradas no controle de versão antes da integração. O Gradle Wrapper padroniza a execução do build e dos testes, enquanto o GitHub Actions pode automatizar as verificações configuradas no repositório.
 
-## Pré-requisitos
+> A documentação descreve a utilização do Scrum como abordagem de organização e do GitHub Projects como quadro de tarefas. Não presume duração fixa de sprints ou realização de cerimônias específicas que não estejam registradas pelo time.
 
-Para executar o projeto, é necessário ter instalado na máquina:
+## Infraestrutura e publicação
 
-* **Java JDK:** Versão 17 ou superior
-* **Apache Maven:** Versão 3.8+ (ou utilizar o wrapper `./mvnw`)
-* **Navegador Web:** Google Chrome, Mozilla Firefox, Microsoft Edge ou similar
+### Neon — PostgreSQL
 
----
+O Neon fornece o serviço PostgreSQL gerenciado na nuvem. A aplicação Spring Boot aceita a conexão por variáveis de ambiente:
 
-## Instalação
+- `SPRING_DATASOURCE_URL` — URL JDBC do banco.
+- `SPRING_DATASOURCE_USERNAME` — usuário do banco.
+- `SPRING_DATASOURCE_PASSWORD` — senha do banco.
 
-1. Clone o repositório para o seu ambiente local:
-`git clone https://github.com/usuario/ecogiro.git`
+Em ambiente local, o projeto mantém H2 como fallback. Para produção, as variáveis do PostgreSQL precisam estar configuradas no serviço de hospedagem. Nunca inclua credenciais reais em arquivos versionados, commits, issues ou capturas de tela.
 
-2. Acesse a pasta do projeto:
-`cd ecogiro`
+### Render — backend
 
-3. Compile o projeto e baixe as dependências do Maven:
-`mvn clean install`
+O Render hospeda e executa o serviço Java/Spring Boot. A aplicação utiliza a variável `PORT` disponibilizada pelo ambiente e as variáveis de conexão do banco. O serviço pode entrar em suspensão no plano gratuito após períodos de inatividade; o monitoramento externo não representa garantia de disponibilidade contínua.
 
----
+### Cloudflare Pages — frontend
 
-## Como Executar
+O Cloudflare Pages publica a interface web. A configuração de integração encaminha chamadas da API para o backend hospedado no Render, conforme os arquivos de configuração do projeto e a variável de ambiente `BACKEND_URL`.
 
-1. Inicie a aplicação Spring Boot através da sua IDE de preferência ou pelo terminal:
-`mvn spring-boot:run`
+### UptimeRobot — monitoramento
 
-2. Confirme se a aplicação subiu com sucesso na porta `8080` (mensagem no console: `Tomcat started on port(s): 8080`).
+O UptimeRobot foi configurado para realizar verificações periódicas do endereço público do serviço e enviar notificações de disponibilidade. Ele executa as verificações em infraestrutura externa, não no computador do desenvolvedor. O monitoramento ajuda a identificar indisponibilidade, mas não impede reinicializações ou limitações do plano de hospedagem.
 
-3. Acesse a aplicação no navegador:
-* **Página Inicial:** `http://localhost:8080/index.html` (ou via Live Server / servidor estático)
-* **Quiz de Recomendação:** `http://localhost:8080/quiz.html`
-* **Console do Banco H2:** `http://localhost:8080/h2-console`
+## Modelo de dados e documentação técnica
 
-### Configurações de Acesso ao H2:
-* **JDBC URL:** `jdbc:h2:mem:ecogirodb` (ou conforme configurado no `application.properties`)
-* **User Name:** `sa`
-* **Password:** *(deixe em branco)*
+A documentação complementar está organizada nos seguintes arquivos:
 
----
+| Documento | Conteúdo |
+| --- | --- |
+| [Modelo de dados](https://github.com/arthurkratos20-max/EcoGiro/blob/feature/branch12-rf04-rf05-rf08-rf09/docs/MODELO_DE_DADOS.md) | Diagrama entidade-relacionamento, entidades, chaves, relacionamentos e dicionário de dados |
+| [Regras de recomendação](https://github.com/arthurkratos20-max/EcoGiro/blob/feature/branch12-rf04-rf05-rf08-rf09/docs/REGRAS_RECOMENDACAO.md) | Matriz de preferências, critérios de pontuação, desempate e cenários de teste |
+| [Auditoria do backlog](https://github.com/arthurkratos20-max/EcoGiro/blob/feature/branch12-rf04-rf05-rf08-rf09/docs/AUDITORIA_BACKLOG_20261015.md) | Rastreabilidade de tarefas, decisões de implementação, validações e pendências |
+| [Publicação da Branch 12](https://github.com/arthurkratos20-max/EcoGiro/blob/feature/branch12-rf04-rf05-rf08-rf09/DEPLOY_BRANCH12.md) | Configuração de Render, Neon e Cloudflare Pages |
 
-## Estrutura do Projeto
+## Execução local
 
-ecogiro/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── ecogiro/
-│   │   │           ├── controller/
-│   │   │           ├── dto/
-│   │   │           ├── model/
-│   │   │           ├── repository/
-│   │   │           └── service/
-│   │   └── resources/
-│   │       ├── static/
-│   │       │   ├── css/
-│   │       │   ├── img/
-│   │       │   ├── js/
-│   │       │   ├── index.html
-│   │       │   └── quiz.html
-│   │       └── application.properties
-└── pom.xml
+### Requisitos
 
----
+- JDK 21
+- Node.js 22 para os testes do frontend
+- Git (para clonar o repositório)
 
-## Exemplos de Uso
+### Backend
 
-### Payload de Envio do Quiz (`POST /recomendacao`)
+Entre no diretório do módulo Java:
 
-{
-  "distancia": "Média — 3 a 10 km",
-  "esforco": "Pouco — gosto de ajuda elétrica",
-  "finalidade": "Lazer e passeios",
-  "habilitacao": "Não tenho e não pretendo tirar",
-  "orcamento": "Médio"
-}
+```bash
+cd "EcoGiro Branch 11/EcoGiro-feature-Adicao-Documentos/ecogiro"
+```
 
-### Resposta do Sistema (`200 OK`)
+No Linux/macOS:
 
-{
-  "recomendacaoPrincipal": "E-bike",
-  "recomendacaoAlternativa": "Bicicleta"
-}
+```bash
+bash gradlew test bootJar --no-daemon
+bash gradlew bootRun
+```
 
----
+No Windows PowerShell:
 
-## API
+```powershell
+.\gradlew.bat test bootJar
+.\gradlew.bat bootRun
+```
 
-### Endpoints Disponíveis
+Por padrão, a aplicação fica disponível em `http://localhost:8080/`, respeitando a porta definida pela variável `PORT`.
 
-#### Criar Recomendação
-* **URL:** `/recomendacao`
-* **Método:** `POST`
-* **Consumes:** `application/json`
-* **Produces:** `application/json`
-* **Descrição:** Recebe os parâmetros preenchidos no quiz, calcula a recomendação ideal, salva a entidade no banco de dados H2 e devolve os veículos indicados.
+### Testes do frontend e regras JavaScript
 
----
+Na raiz do repositório, com Node.js 22:
 
-## Capturas de Tela
+```bash
+node --test tests/*.test.cjs
+```
 
-* **Tela Principal (Landing Page):** `[ Inserir imagem da landing page aqui ]`
-* **Quiz de Recomendação:** `[ Inserir imagem da tela do quiz aqui ]`
-* **Banco de Dados H2:** `[ Inserir imagem do H2 Console com os registros gravados aqui ]`
+Os testes automatizados cobrem regras do questionário e comportamentos da interface. Os testes Java verificam serviços, regras de negócio, segurança e persistência conforme os cenários implementados. A execução local com H2 não substitui a homologação de integração com PostgreSQL/Neon.
 
----
+## API de contratação
 
-## Melhorias Futuras
+Principais endpoints do fluxo de planos e solicitações:
 
-* Integração completa do formulário de contato/suporte com envio de e-mails ou salvamento em banco de dados.
-* Implementação de autenticação e cadastro de usuários para histórico individual de recomendações.
-* Integração com APIs externas de geolocalização para mapeamento dos pontos de retirada de veículos.
-* Mapeamento de persistência em banco de dados relacional permanente (PostgreSQL/MySQL) para ambiente de produção.
+| Método | Endpoint | Finalidade |
+| --- | --- | --- |
+| `GET` | `/api/user/plans` | Consultar planos ativos |
+| `GET` | `/api/user/vehicles?planId=ID` | Listar veículos disponíveis e compatíveis |
+| `POST` | `/api/user/requests` | Criar solicitação com plano, veículo e mensagem opcional |
+| `GET` | `/api/user/requests` | Consultar histórico de solicitações |
+| `POST` | `/api/user/requests/{id}/cancel` | Cancelar solicitação própria pendente |
+| `PATCH` | `/api/admin/requests/{id}/respond` | Aprovar ou rejeitar solicitação conforme autorização |
+
+O protocolo de novas solicitações é gerado no servidor. Registros legados podem utilizar identificadores de apresentação próprios. A seleção de uma unidade na solicitação valida compatibilidade, mas não representa reserva física ou confirmação de aluguel do veículo.
+
+## Segurança e boas práticas
+
+- Senhas são armazenadas com hash BCrypt, não em texto puro.
+- A autorização é verificada no backend, além de eventuais controles de interface.
+- Regras de compatibilidade e permissões são revalidadas no servidor.
+- Segredos e credenciais devem ser configurados como variáveis de ambiente nos provedores.
+- Não utilize dados pessoais reais em exemplos, documentação pública ou evidências de teste.
+
+## Limitações e validação
+
+A existência de configuração de deploy não garante, por si só, que todos os fluxos foram homologados em produção. A integração real com Neon depende das variáveis de ambiente corretas e deve ser validada no ambiente publicado. A suíte com H2 valida o comportamento automatizado, mas não substitui testes de integração no PostgreSQL de produção.
+
+O questionário oferece uma recomendação baseada em preferências informadas pelo usuário; não calcula custo real por quilômetro, autonomia garantida ou elegibilidade legal de cada modelo. A seleção de veículo em uma solicitação não implementa reserva física de frota. Funcionalidades futuras devem ser identificadas como planejadas até que sejam implementadas e testadas.
 
 ---
+
+**EcoGiro — tecnologia, organização e mobilidade sustentável.**
